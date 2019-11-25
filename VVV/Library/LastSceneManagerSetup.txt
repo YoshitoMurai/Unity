@@ -1,0 +1,5 @@
+sceneSetups:
+- path: C:/Users/Yoshito/Desktop/VfxGraphTestbed-sketch-1013/Assets/Test.unity
+  isLoaded: 1
+  isActive: 1
+  isSubScene: 0
