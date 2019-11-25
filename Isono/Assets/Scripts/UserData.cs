@@ -29,12 +29,12 @@ public class UserData : MonoBehaviour
 		}
 
 		var settingFlag = PlayerPrefs.GetInt(CommonInfo.SETTING);
-
-		setting.onSound = (settingFlag & 1000) == 1;
-		setting.onVibration = (settingFlag & 0100) == 1;
-		setting.onEnglish = (settingFlag & 0010) == 1;
-		setting.onEcoMode = (settingFlag & 0001) == 1;
-		setting.alreadyBuy = true;
+       
+		setting.onSound = (settingFlag & 1000) != 0;
+		setting.onVibration = (settingFlag & 0100) != 0;
+		setting.onEnglish = (settingFlag & 0010) != 0;
+		setting.onEcoMode = (settingFlag & 0001) != 0;
+        setting.alreadyBuy = true;
 	}
 	public void SaveSetting()
 	{
@@ -42,7 +42,6 @@ public class UserData : MonoBehaviour
 			| (setting.onVibration ? 1 : 0) << 2
 			| (setting.onEnglish ? 1 : 0) << 1
 			| (setting.onEcoMode ? 1 : 0) << 0;
-        
-		PlayerPrefs.SetInt(CommonInfo.SETTING, settingFlag);
+        PlayerPrefs.SetInt(CommonInfo.SETTING, settingFlag);
 	}
 }
