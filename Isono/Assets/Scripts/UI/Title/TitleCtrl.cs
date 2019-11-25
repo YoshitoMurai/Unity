@@ -16,7 +16,7 @@ namespace Isono.Title
 			_view.OpenView(_model.userData);
 
 			_view.onClickStart
-				.Subscribe(_ => SceneManager.LoadScene("StageSelect"))
+				.Subscribe(_ => SceneManager.LoadScene("Game"))
 				.AddTo(gameObject);
 
 			_view.onClickSetting
