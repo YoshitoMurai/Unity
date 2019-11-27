@@ -5,6 +5,6 @@ namespace IsonoGame.InGame
 {
     public class Cube : MonoBehaviour
     {
-        public Vector2 pos => new Vector2(transform.position.x, transform.position.y);
+        public Vector2 cubepos => new Vector2(transform.position.x, transform.position.y);
     }
 }
