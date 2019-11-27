@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using IsonoGame.Common;
+
 namespace Isono.Title
 {
-	public class TitleModel
+    public class TitleModel
 	{
 		public UserData userData { get; private set; }
 
@@ -23,13 +22,9 @@ namespace Isono.Title
 		{
 			userData.setting.onVibration = !userData.setting.onVibration;
 		}
-		public void SwitchActiveEnglish()
+		public void SwitchActiveRate()
 		{
-			userData.setting.onEnglish = !userData.setting.onEnglish;
-		}
-		public void SwitchActiveEcoMode()
-		{
-			userData.setting.onEcoMode = !userData.setting.onEcoMode;
+			userData.setting.alreadyRate = !userData.setting.alreadyRate;
 		}
 	}
 }

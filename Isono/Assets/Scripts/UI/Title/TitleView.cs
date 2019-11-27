@@ -2,9 +2,11 @@
 using UnityEngine.UI;
 using UniRx;
 using System;
+using IsonoGame.Common;
+
 namespace Isono.Title
 {
-	public class TitleView : MonoBehaviour
+    public class TitleView : MonoBehaviour
 	{
 		[SerializeField] private Button _startButton = default;
 		[SerializeField] private Button _settingButton = default;
@@ -13,68 +15,45 @@ namespace Isono.Title
 		public IObservable<Unit> onClickSetting => _settingButton.OnClickAsObservable();
 
 
-		[Header("Setting")]
-		[SerializeField] private GameObject _settingDialog = default;
-		[SerializeField] private Button _soundButton = default;
-		[SerializeField] private Button _vibrationButton = default;
-		[SerializeField] private Button _languageButton = default;
-		[SerializeField] private Button _ecomodeButton = default;
-		[SerializeField] private Button _backButton = default;
-		[SerializeField] private Image _soundButtonImage = default;
-		[SerializeField] private Image _vibButtonImage = default;
-		[SerializeField] private Image _langButtonImage = default;
-		[SerializeField] private Image _ecoButtonImage = default;
-		public IObservable<SettingName> onClickSettingDetail;
-		public IObservable<Unit> onClickSettingBack => _backButton.OnClickAsObservable();
+		[Header("Setting[0:Sound 1:Vibration 2:Rate]")]
+		[SerializeField] private Button _settingDialog = default;
+		[SerializeField] private Button[] _settingDetailButton = default;
+		[SerializeField] private Image[] _settingButtonImage = default;
+        [SerializeField] private Sprite[] _settingOnSprite = default;
+        [SerializeField] private Sprite[] _settingOffSprite = default;
+        public IObservable<SettingName> onClickSettingDetail;
 
-		[SerializeField] private Color _onSoundColor = default;
-		[SerializeField] private Color _onVibrationColor = default;
-		[SerializeField] private Color _onEnglishColor = default;
-		[SerializeField] private Color _onEcomodeColor = default;
-		[SerializeField] private Color _offColor = default;
 		public void OpenView(UserData userData)
 		{
-			onClickSettingDetail = _soundButton.OnClickAsObservable().Select(_ => SettingName.Sound)
-				.Merge(_vibrationButton.OnClickAsObservable().Select(_ => SettingName.Vibration)
-					, _languageButton.OnClickAsObservable().Select(_ => SettingName.English)
-					, _ecomodeButton.OnClickAsObservable().Select(_ => SettingName.EcoMode)
+			onClickSettingDetail = _settingDetailButton[0].OnClickAsObservable().Select(_ => SettingName.Sound)
+				.Merge(_settingDetailButton[1].OnClickAsObservable().Select(_ => SettingName.Vibration)
+					, _settingDetailButton[2].OnClickAsObservable().Select(_ => SettingName.Rate)
 				);
-			SetSettingDialog(userData);
+
+            _settingDialog.OnClickAsObservable().Subscribe(_=>_settingDialog.gameObject.SetActive(false)).AddTo(gameObject);
+
+            SetSettingDialog(userData);
+
+			
 		}
-		public void SetSettingDialog(UserData userData)
+		private void SetSettingDialog(UserData userData)
 		{
-			SetSoundColor(userData.setting.onSound);
-			SetVibColor(userData.setting.onVibration);
-			SetEnglishColor(userData.setting.onEnglish);
-			SetEcoModeColor(userData.setting.onEcoMode);
-		}
+            SetSettingButton(SettingName.Sound, userData.setting.onSound);
+            SetSettingButton(SettingName.Vibration, userData.setting.onVibration);
+        }
+        public void SetSettingButton(SettingName index, bool on)
+        {
+            _settingButtonImage[(int)index].sprite = on ? _settingOnSprite[(int)index] : _settingOffSprite[(int)index];
+        }
 		public void SetActiveSettingDialog(bool isActive)
 		{
-			_settingDialog.SetActive(isActive);
-		}
-		public void SetSoundColor(bool on)
-		{
-			var colors = _soundButton.colors;
-			_soundButtonImage.color = on ? _onSoundColor : _offColor;
-		}
-		public void SetVibColor(bool on)
-		{
-			_vibButtonImage.color = on ? _onVibrationColor : _offColor;
-		}
-		public void SetEnglishColor(bool on)
-		{
-			_langButtonImage.color = on ? _onEnglishColor : _offColor;
-		}
-		public void SetEcoModeColor(bool on)
-		{
-			_ecoButtonImage.color = on ? _onEcomodeColor : _offColor;
+			_settingDialog.gameObject.SetActive(isActive);
 		}
 	}
 	public enum SettingName
 	{
 		Sound,
 		Vibration,
-		English,
-		EcoMode,
+		Rate,
 	}
 }
