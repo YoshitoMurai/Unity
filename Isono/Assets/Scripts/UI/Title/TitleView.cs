@@ -10,12 +10,18 @@ namespace Isono.Title
 	{
 		[SerializeField] private Button _startButton = default;
 		[SerializeField] private Button _settingButton = default;
+        [SerializeField] private Button _noAdsButton = default;
+        [SerializeField] private Button _instagramButton = default;
+        [SerializeField] private Button _twitterButton = default;
+
 
 		public IObservable<Unit> onClickStart => _startButton.OnClickAsObservable();
 		public IObservable<Unit> onClickSetting => _settingButton.OnClickAsObservable();
+        public IObservable<Unit> onClickNoAds => _settingButton.OnClickAsObservable();
+        public IObservable<Unit> onClickInstagram => _instagramButton.OnClickAsObservable();
+        public IObservable<Unit> onClickTwitter => _twitterButton.OnClickAsObservable();
 
-
-		[Header("Setting[0:Sound 1:Vibration 2:Rate]")]
+        [Header("Setting[0:Sound 1:Vibration 2:Rate]")]
 		[SerializeField] private Button _settingDialog = default;
 		[SerializeField] private Button[] _settingDetailButton = default;
 		[SerializeField] private Image[] _settingButtonImage = default;

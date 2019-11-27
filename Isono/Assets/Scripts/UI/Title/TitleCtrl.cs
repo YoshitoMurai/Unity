@@ -23,6 +23,18 @@ namespace Isono.Title
                 .Subscribe(_ => _view.SetActiveSettingDialog(true))
                 .AddTo(gameObject);
 
+            _view.onClickNoAds
+                .Subscribe(_ => _view.SetActiveSettingDialog(true))
+                .AddTo(gameObject);
+
+            _view.onClickInstagram
+                .Subscribe(_ => Application.OpenURL("https://www.instagram.com/baya.sea/"))
+                .AddTo(gameObject);
+            
+            _view.onClickTwitter
+                .Subscribe(_ => Application.OpenURL("https://twitter.com/7373Homa"))
+                .AddTo(gameObject);
+
             _view.onClickSettingDetail
                 .Subscribe(settingname => OnSettingButton(settingname))
                 .AddTo(gameObject);

@@ -433,6 +433,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startButton: {fileID: 1071771365}
   _settingButton: {fileID: 1562780870}
+  _noAdsButton: {fileID: 222785807}
+  _instagramButton: {fileID: 549815195}
+  _twitterButton: {fileID: 93137306}
   _settingDialog: {fileID: 1904220164}
   _settingDetailButton:
   - {fileID: 2057992451}
