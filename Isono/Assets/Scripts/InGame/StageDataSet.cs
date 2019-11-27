@@ -9,7 +9,7 @@ namespace Connect.InGame
     public class StageDataSet : ScriptableObject
     {
         const string _kAssetFullPathFormat     = "Assets/Resources/" + _kAssetResourcePathFormat;
-        const string _kAssetResourcePathFormat = "ScriptableObject/InGame/Stage_{0:000}";
+        const string _kAssetResourcePathFormat = "ScriptableObject/InGame/Stage_{0:000}.asset";
 
         [SerializeField] List<Vector3> _cubePosList;
 
@@ -55,7 +55,7 @@ namespace Connect.InGame
         /// <returns></returns>
         static StageDataSet CreateForEditor(string path)
         {
-            var asset = new StageDataSet();
+            var asset = CreateInstance<StageDataSet>();
             AssetDatabase.CreateAsset(asset, path);
 
             return asset;
@@ -67,6 +67,7 @@ namespace Connect.InGame
         public void SetDirtyForEditor()
         {
             EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
         }
 
         /// <summary>
