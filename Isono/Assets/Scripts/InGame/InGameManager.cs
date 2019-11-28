@@ -3,6 +3,7 @@ using UniRx.Triggers;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using Connect.InGame.UI;
 
 namespace IsonoGame.InGame
 {
@@ -13,12 +14,15 @@ namespace IsonoGame.InGame
         [SerializeField] private int _rimitObj = 3;
         [SerializeField] private int _strandLength = 2;
         [SerializeField] private Cube[] _stageObj = default;
+        [SerializeField] private IngameView ingameView = default;
         public List<Cube> putCubList = default;
 
         private int _currentPutObj = 0;
 
         void Start()
         {
+            ingameView.InitView(1);
+
             mainCamera = Camera.main;
             putCubList = new List<Cube>();
             
