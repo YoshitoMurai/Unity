@@ -5,6 +5,9 @@ namespace IsonoGame.InGame
 {
     public class StageCube : Cube
     {
+        public void ConnectAll()
+        {
 
+        }
     }
 }

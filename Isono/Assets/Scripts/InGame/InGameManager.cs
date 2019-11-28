@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using Connect.InGame.UI;
+using UnityEngine.EventSystems;
 
 namespace IsonoGame.InGame
 {
@@ -25,7 +26,7 @@ namespace IsonoGame.InGame
 
             mainCamera = Camera.main;
             putCubList = new List<Cube>();
-            
+
             foreach (var item in _stageObj)
             {
                 putCubList.Add(item);
@@ -37,9 +38,18 @@ namespace IsonoGame.InGame
                 .AddTo(gameObject);
 
             this.UpdateAsObservable()
-                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj)
+                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !isOver())
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
+
+        }
+
+        private bool isOver()
+        {
+            if (EventSystem.current.currentSelectedGameObject != null) { return true; }
+            if (EventSystem.current.IsPointerOverGameObject()) { return true; }
+            if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) { return true; }
+            return false;
         }
 
         private void KeepTouch()
