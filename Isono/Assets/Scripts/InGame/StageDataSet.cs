@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using IsonoGame;
+using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -23,7 +24,7 @@ namespace Connect.InGame
         public static StageDataSet Load(int stageNum)
         {
             string path = string.Format(_kAssetResourcePathFormat, stageNum);
-            var asset   = Resources.Load<StageDataSet>(path);
+            var asset   = ResourceManager.Load<StageDataSet>(path);
             Debug.Assert(asset != null, "StageDataSetが取得できません Path: " + path);
 
             return asset;
