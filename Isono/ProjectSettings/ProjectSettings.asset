@@ -632,6 +632,7 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
+    Build: 1
     UNet: 1
   luminIcon:
     m_Name: 
@@ -655,7 +656,7 @@ PlayerSettings:
   cloudProjectId: 9f53ec94-87a9-4738-8da0-3a3b8aa4058e
   framebufferDepthMemorylessMode: 0
   projectName: Connect
-  organizationId: yoshito-4382600
+  organizationId: regaliagamestudio
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
