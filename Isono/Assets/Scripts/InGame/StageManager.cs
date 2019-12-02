@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using IsonoGame;
 using UnityEngine;
 
 namespace Connect.InGame
 {
     public class StageManager : MonoBehaviour
     {
+        const string _kPathPutPrefab = "Prefabs/InGame/PutObject";
+
         public void Reset()
         {
             var linkCubeObj = GameObject.Find("Link_Cube");
@@ -17,6 +18,16 @@ namespace Connect.InGame
 
         [SerializeField] Transform _linkCube;
         [SerializeField] int _stageNum;
+
+        void Start()
+        {
+            var stageAsset = StageDataSet.Load(_stageNum);
+            foreach (var dataPos in stageAsset.CubePosList)
+            {
+                var putPrefab = ResourceManager.Load<GameObject>(_kPathPutPrefab);
+                var putObject = Instantiate(putPrefab, dataPos, Quaternion.identity);
+            }
+        }
 
 #if UNITY_EDITOR
         [ContextMenu("SaveAsset")]
