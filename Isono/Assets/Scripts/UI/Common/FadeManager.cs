@@ -70,7 +70,6 @@ namespace Connect
                 yield return 0;
             }
 
-            //シーン切替 .
             SceneManager.LoadScene((int)scene);
 
             //だんだん明るく .

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Connect.Common
 {
-    public class UserData : MonoBehaviour
+    public class UserData
     {
         public int id { get; set; }
         public int clearStage { get; set; }

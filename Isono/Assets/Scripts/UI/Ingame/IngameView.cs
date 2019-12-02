@@ -27,7 +27,7 @@ namespace Connect.InGame.UI
             _backButton.OnClickAsObservable().Subscribe(_ => Debug.Log("やり直し")).AddTo(gameObject);
             _skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
             _skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);
-            _unlockButton.OnClickAsObservable().Subscribe(_ => Debug.Log("_unlockButton")).AddTo(gameObject);
+            _unlockButton.OnClickAsObservable().Subscribe(_ => AdvertiseManager.Instance.ShowMovieAds());
 
             for (int i = 0; i < _skinButton.Length; i++)
             {
