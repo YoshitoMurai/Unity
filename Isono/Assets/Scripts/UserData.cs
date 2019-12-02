@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IsonoGame.Common
+namespace Connect.Common
 {
     public class UserData : MonoBehaviour
     {

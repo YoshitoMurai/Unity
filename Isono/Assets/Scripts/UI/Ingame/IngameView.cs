@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using UniRx;
 using System;
 using TMPro;
-using IsonoGame;
+using Connect;
+
 namespace Connect.InGame.UI
 {
     public class IngameView : MonoBehaviour
@@ -22,7 +23,7 @@ namespace Connect.InGame.UI
         // Start is called before the first frame update
         public void InitView(int stageNum)
         {
-            _titleBackButton.OnClickAsObservable().Subscribe(_ => GameSceneManager.Instance.LoadScene(GameSceneManager.kSceneType.Title)).AddTo(gameObject);
+            _titleBackButton.OnClickAsObservable().Subscribe(_ => GameSceneManager.Instance.LoadScene(kSceneType.Title)).AddTo(gameObject);
             _backButton.OnClickAsObservable().Subscribe(_ => Debug.Log("やり直し")).AddTo(gameObject);
             _skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
             _skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);

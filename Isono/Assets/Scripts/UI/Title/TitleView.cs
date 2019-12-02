@@ -2,9 +2,10 @@
 using UnityEngine.UI;
 using UniRx;
 using System;
-using IsonoGame.Common;
+using UnityEngine.SceneManagement;
+using Connect.Common;
 
-namespace Isono.Title
+namespace Connect.Title
 {
     public class TitleView : MonoBehaviour
 	{

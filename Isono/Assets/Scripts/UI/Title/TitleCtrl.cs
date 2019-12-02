@@ -4,8 +4,9 @@ using UniRx;
 using System;
 using UnityEngine.SceneManagement;
 using IsonoGame;
+using Connect;
 
-namespace Isono.Title
+namespace Connect.Title
 {
     public class TitleCtrl : MonoBehaviour
     {
@@ -60,7 +61,7 @@ namespace Isono.Title
         }
         private void GameStart()
         {
-            GameSceneManager.Instance.LoadScene(GameSceneManager.kSceneType.Game);
+            GameSceneManager.Instance.LoadScene(kSceneType.Game);
         }
     }
 }
