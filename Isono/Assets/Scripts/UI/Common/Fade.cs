@@ -7,24 +7,24 @@ namespace Connect
 {
     public class Fade : MonoBehaviour
     {
-        public void FadeOut(CanvasGroup canvasGroup, float duration,  GraphicRaycaster gr)
+        public void FadeOut(CanvasGroup canvasGroup, float duration,  GraphicRaycaster gr = null)
         {
-            gr.enabled = true;
+            if (gr != null) gr.enabled = true;
             canvasGroup.DOFade(0.0F, duration).
                 OnComplete(() =>
                 {
                     canvasGroup.blocksRaycasts = false;
-                    gr.enabled = false;
+                    if (gr != null) gr.enabled = false;
                 });
         }
 
-        public void FadeIn(CanvasGroup canvasGroup, float duration, GraphicRaycaster gr)
+        public void FadeIn(CanvasGroup canvasGroup, float duration, GraphicRaycaster gr = null)
         {
-            gr.enabled = true;
+            if(gr != null)gr.enabled = true;
             canvasGroup.DOFade(1.0F, duration).OnComplete(() =>
             {
                 canvasGroup.blocksRaycasts = true;
-                gr.enabled = false;
+                if (gr != null) gr.enabled = false;
             });
         }
     }
