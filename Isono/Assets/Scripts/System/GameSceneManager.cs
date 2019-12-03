@@ -2,19 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-namespace IsonoGame
+using UnityEngine.UI;
+
+namespace Connect
 {
     public class GameSceneManager : MonoBehaviour
     {
         public static GameSceneManager Instance;
-
-        public enum kSceneType
-        {
-            Game = 0,
-            Title = 1,
-            StageSelect = 2,
-        }
-
         void Awake()
         {
             if (Instance != null)
@@ -28,7 +22,12 @@ namespace IsonoGame
 
         public void LoadScene(kSceneType type)
         {
-            SceneManager.LoadScene((int)type);
+            FadeManager.Instance.LoadScene(type,1.0f);
         }
+    }
+    public enum kSceneType
+    {
+        Title = 0,
+        Game = 1,
     }
 }

@@ -1,6 +1,6 @@
-﻿using IsonoGame.Common;
+﻿using Connect.Common;
 
-namespace Isono.Title
+namespace Connect.Title
 {
     public class TitleModel
 	{

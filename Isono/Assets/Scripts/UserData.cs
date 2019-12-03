@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace IsonoGame.Common
+namespace Connect.Common
 {
-    public class UserData : MonoBehaviour
+    public class UserData
     {
         public int id { get; set; }
         public int clearStage { get; set; }
