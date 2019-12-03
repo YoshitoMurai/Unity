@@ -9,6 +9,8 @@ namespace Connect.Title
 {
     public class TitleView : MonoBehaviour
 	{
+        
+
 		[SerializeField] private Button _startButton = default;
 		[SerializeField] private Button _settingButton = default;
         [SerializeField] private Button _noAdsButton = default;
@@ -46,8 +48,8 @@ namespace Connect.Title
 		}
 		private void SetSettingDialog(UserData userData)
 		{
-            SetSettingButton(SettingName.Sound, userData.setting.onSound);
-            SetSettingButton(SettingName.Vibration, userData.setting.onVibration);
+            SetSettingButton(SettingName.Sound, userData.onSound);
+            SetSettingButton(SettingName.Vibration, userData.onVibration);
         }
         public void SetSettingButton(SettingName index, bool on)
         {

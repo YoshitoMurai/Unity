@@ -4,40 +4,70 @@ using UnityEngine;
 
 namespace Connect.Common
 {
-    public class UserData
+    public class UserData : MonoBehaviour
     {
-        public int id { get; set; }
         public int clearStage { get; set; }
-        public int[] starNum { get; set; } = new int[CommonInfo.STAGE_MAX];
-        public Setting setting { get; set; } = new Setting();
+        public bool onSound { get; private set; }
+        public bool onVibration { get; private set; }
+        #region Singleton
 
-        public class Setting
+        private static UserData instance;
+
+        public static UserData Instance
         {
-            public bool onSound { get; set; }
-            public bool onVibration { get; set; }
-            public bool alreadyRate { get; set; }
-        }
-        public UserData()
-        {
-            id = 0;
-            clearStage = 3;
-            for (int i = 0; i < clearStage; i++)
+            get
             {
-                starNum[i] = 2;
+                if (instance == null)
+                {
+                    instance = (UserData)FindObjectOfType(typeof(UserData));
+
+                    if (instance == null)
+                    {
+                        Debug.LogError(typeof(UserData) + "is nothing");
+                    }
+                }
+
+                return instance;
             }
+        }
+
+        #endregion Singleton
+       
+        public void Awake()
+        {
+            clearStage = PlayerPrefs.GetInt(CommonInfo.CLEAR_STAGE_NUM);
 
             var settingFlag = PlayerPrefs.GetInt(CommonInfo.SETTING);
 
-            setting.onSound = (settingFlag & 0001) != 0;
-            setting.onVibration = (settingFlag & 0010) != 0;
-            setting.alreadyRate = (settingFlag & 0100) != 0;
+            onSound = (settingFlag & 0001) != 0;
+            onVibration = (settingFlag & 0010) != 0;
+            DontDestroyOnLoad(gameObject);
         }
         public void SaveSetting()
         {
-            var settingFlag = (setting.onSound ? 1 : 0) << 0
-                | (setting.onVibration ? 1 : 0) << 1
-                | (setting.alreadyRate ? 1 : 0) << 2;
+            var settingFlag = (onSound ? 1 : 0) << 0
+                | (onVibration ? 1 : 0) << 1;
             PlayerPrefs.SetInt(CommonInfo.SETTING, settingFlag);
+            Save();
+        }
+        public void SwitchSound()
+        {
+            onSound = !onSound;
+            SaveSetting();
+        }
+        public void SwitchVib()
+        {
+            onVibration = !onVibration;
+            SaveSetting();
+        }
+        public void SetClearStage(int num)
+        {
+            PlayerPrefs.SetInt(CommonInfo.CLEAR_STAGE_NUM, num);
+            Save();
+        }
+        private void Save()
+        {
+            PlayerPrefs.Save();
         }
     }
 }

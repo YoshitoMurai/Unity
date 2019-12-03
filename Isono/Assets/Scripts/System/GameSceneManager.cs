@@ -22,7 +22,7 @@ namespace Connect
 
         public void LoadScene(kSceneType type)
         {
-            FadeManager.Instance.LoadScene(type,1.0f);
+            FadeManager.Instance.LoadScene(type,0.5f);
         }
     }
     public enum kSceneType

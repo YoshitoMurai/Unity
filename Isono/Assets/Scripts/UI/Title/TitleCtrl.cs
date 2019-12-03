@@ -5,17 +5,18 @@ using System;
 using UnityEngine.SceneManagement;
 using IsonoGame;
 using Connect;
+using Connect.Common;
 
 namespace Connect.Title
 {
     public class TitleCtrl : MonoBehaviour
     {
         [SerializeField] private TitleView _view = default;
-        private TitleModel _model;
+        [SerializeField] private AudioSource _bgm = default;
         void Start()
         {
-            _model = new TitleModel();
-            _view.OpenView(_model.userData);
+            _bgm.mute = !UserData.Instance.onSound;
+            _view.OpenView(UserData.Instance);
             _view.onClickStart
                 .Subscribe(_ => GameStart())
                 .AddTo(gameObject);
@@ -45,12 +46,13 @@ namespace Connect.Title
             switch (settingName)
             {
                 case SettingName.Sound:
-                    _model.SwitchActiveSound();
-                    _view.SetSettingButton(settingName, _model.userData.setting.onSound);
+                    UserData.Instance.SwitchSound();
+                    _view.SetSettingButton(settingName, UserData.Instance.onSound);
+                    _bgm.mute = !UserData.Instance.onSound;
                     break;
                 case SettingName.Vibration:
-                    _model.SwitchActiveVib();
-                    _view.SetSettingButton(settingName, _model.userData.setting.onVibration);
+                    UserData.Instance.SwitchVib();
+                    _view.SetSettingButton(settingName, UserData.Instance.onVibration);
                     break;
                 case SettingName.Rate:
                     Debug.Log("Rate");
