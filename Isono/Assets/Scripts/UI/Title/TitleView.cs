@@ -30,6 +30,7 @@ namespace Connect.Title
         [SerializeField] private Sprite[] _settingOffSprite = default;
         public IObservable<SettingName> onClickSettingDetail;
 
+        [SerializeField] GraphicRaycaster _graphicRaycaster = default;
 		public void OpenView(UserData userData)
 		{
 			onClickSettingDetail = _settingDetailButton[0].OnClickAsObservable().Select(_ => SettingName.Sound)
@@ -37,7 +38,7 @@ namespace Connect.Title
 					, _settingDetailButton[2].OnClickAsObservable().Select(_ => SettingName.Rate)
 				);
 
-            _settingDialog.OnClickAsObservable().Subscribe(_=>_settingDialog.gameObject.SetActive(false)).AddTo(gameObject);
+            _settingDialog.OnClickAsObservable().Subscribe(_=> SetActiveSettingDialog(false)).AddTo(gameObject);
 
             SetSettingDialog(userData);
 
@@ -54,8 +55,19 @@ namespace Connect.Title
         }
 		public void SetActiveSettingDialog(bool isActive)
 		{
-			_settingDialog.gameObject.SetActive(isActive);
-		}
+			
+            var cd = _settingDialog.GetComponent<CanvasGroup>();
+
+            if (isActive)
+            {
+                _settingDialog.gameObject.SetActive(true);
+                _settingDialog.GetComponent<Fade>().FadeIn( cd,1.0f, _graphicRaycaster);
+            }
+            else
+            {
+                _settingDialog.GetComponent<Fade>().FadeOut(cd,1.0f, _graphicRaycaster);
+            }
+        }
 	}
 	public enum SettingName
 	{
