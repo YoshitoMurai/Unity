@@ -52,7 +52,7 @@ namespace Connect
             graphicRaycaster.enabled = false;
             DontDestroyOnLoad(gameObject);
         }
-        public void LoadScene(kSceneType scene, float interval)
+        public void LoadScene(kSceneType scene, float interval = 0.5f)
         {
             StartCoroutine(TransScene(scene, interval));
         }

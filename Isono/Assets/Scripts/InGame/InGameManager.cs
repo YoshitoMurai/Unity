@@ -1,12 +1,14 @@
 ﻿using UniRx;
 using UniRx.Triggers;
-using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
-using Connect.InGame.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using System.Collections;
+using Connect.InGame.UI;
+using Connect;
 
-namespace IsonoGame.InGame
+
+namespace Connect.InGame
 {
     public class InGameManager : MonoBehaviour
     {
@@ -14,8 +16,9 @@ namespace IsonoGame.InGame
         [SerializeField] private GameObject _putObj = default;
         [SerializeField] private int _rimitObj = 3;
         [SerializeField] private int _strandLength = 2;
-        [SerializeField] private Cube[] _stageObj = default;
+        [SerializeField] private Cube[] _connectObj = default;
         [SerializeField] private IngameView ingameView = default;
+        [SerializeField] private int connectCount = 0;
         public List<Cube> putCubList = default;
 
         private int _currentPutObj = 0;
@@ -27,9 +30,10 @@ namespace IsonoGame.InGame
             mainCamera = Camera.main;
             putCubList = new List<Cube>();
 
-            foreach (var item in _stageObj)
+            foreach (var item in _connectObj)
             {
                 putCubList.Add(item);
+                for(int i = 0; i < _connectObj.Length; i++) _connectObj[i].SetConnect(item);
             }
 
             this.UpdateAsObservable()
@@ -38,13 +42,13 @@ namespace IsonoGame.InGame
                 .AddTo(gameObject);
 
             this.UpdateAsObservable()
-                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !isOver())
+                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !UITouch())
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
 
         }
 
-        private bool isOver()
+        private bool UITouch()
         {
             if (EventSystem.current.currentSelectedGameObject != null) { return true; }
             if (EventSystem.current.IsPointerOverGameObject()) { return true; }
@@ -69,7 +73,9 @@ namespace IsonoGame.InGame
 
         private void SetStrand(PutCube putCube)
         {
-            putCube.InitLineRenderer();
+            foreach (var item in _connectObj) putCube.SetConnect(item);
+
+            putCube.InitLineRenderer(_connectObj.Length);
 
             foreach (var putcubelist in putCubList)
             {
@@ -80,6 +86,31 @@ namespace IsonoGame.InGame
             }
 
             putCubList.Add(putCube);
+
+            // つながっているオブジェクト判定を更新
+            for (int i = 0; i < _connectObj.Length; i++)
+            {
+                for (int j = 0; j < putCube.connectFlag.Count; j++)
+                {
+                    if (putCube.connectFlag[j])
+                    {
+                        _connectObj[i].connectFlag[j] = putCube.connectFlag[j];
+                    }
+                }
+                if (putCube.connectFlag[i]) connectCount++;
+            }
+
+            Observable.FromCoroutine(() => GameClear()).Subscribe();
+            connectCount = 0;
+        }
+
+        IEnumerator GameClear()
+        {
+            if (_connectObj.Length <= connectCount)
+            {
+                yield return new WaitForSeconds(1f);
+                GameSceneManager.Instance.LoadScene(kSceneType.Title);
+            }
         }
     }
 }

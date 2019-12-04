@@ -1,5 +1,8 @@
 ﻿using IsonoGame;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Connect.InGame
 {
@@ -30,7 +33,7 @@ namespace Connect.InGame
         }
 
 #if UNITY_EDITOR
-        [ContextMenu("SaveAsset")]
+
         void saveAsset()
         {
             var asset = StageDataSet.LoadForEditor(_stageNum);
@@ -48,6 +51,25 @@ namespace Connect.InGame
             Debug.Log(asset.name + "の生成に成功");
 
         }
+
+        [CustomEditor(typeof(StageManager))]
+        public class StageManagerEditor : Editor
+        {
+            public override void OnInspectorGUI()
+            {
+                base.OnInspectorGUI();
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button("Save", GUILayout.Width(100), GUILayout.Height(30)))
+                    {
+                        var stage = target as StageManager;
+                        stage.saveAsset();
+                    }
+                }
+            }
+        }
+
 #endif
     }
 }
