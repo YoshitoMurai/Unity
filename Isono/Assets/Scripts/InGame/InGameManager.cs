@@ -40,7 +40,6 @@ namespace Connect.InGame
         void Start()
         {
             _ingameView.InitView(1);
-
             mainCamera = Camera.main;
             putCubList = new List<Cube>();
 
@@ -48,7 +47,7 @@ namespace Connect.InGame
             foreach (var dataPos in stageAsset.CubePosList)
             {
                 var connectPrefab = ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab);
-                var connectObj    = Instantiate(connectPrefab, dataPos, Quaternion.identity);
+                var connectObj = Instantiate(connectPrefab, dataPos, Quaternion.identity, _linkCube);
                 var connect       = connectObj.GetComponent<Cube>();
                 putCubList.Add(connect);
             }
@@ -59,7 +58,10 @@ namespace Connect.InGame
             foreach (var item in _connectObj)
             {
                 putCubList.Add(item);
-                for(int i = 0; i < _connectObj.Length; i++) _connectObj[i].SetConnect(item);
+                for (int i = 0; i < _connectObj.Length; i++)
+                {
+                    _connectObj[i].SetConnect(item);
+                }
             }
 
             this.UpdateAsObservable()
@@ -71,7 +73,6 @@ namespace Connect.InGame
                 .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !UITouch())
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
-
         }
 
         private bool UITouch()
@@ -92,7 +93,6 @@ namespace Connect.InGame
             var screenPoint = mainCamera.WorldToScreenPoint(transform.position);
             var offset = transform.position + Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
             _currentPutObj++;
-
 
             SetStrand(Instantiate(_putObj, offset, new Quaternion()).GetComponent<PutCube>());
         }
@@ -118,7 +118,7 @@ namespace Connect.InGame
             {
                 for (int j = 0; j < putCube.connectFlag.Count; j++)
                 {
-                    if (putCube.connectFlag[j])
+                    if (putCube.connectFlag[i])
                     {
                         _connectObj[i].connectFlag[j] = putCube.connectFlag[j];
                     }
@@ -127,7 +127,6 @@ namespace Connect.InGame
             }
 
             Observable.FromCoroutine(() => GameClear()).Subscribe();
-            _connectCount = 0;
         }
 
         IEnumerator GameClear()
@@ -137,6 +136,7 @@ namespace Connect.InGame
                 yield return new WaitForSeconds(1f);
                 GameSceneManager.Instance.LoadScene(kSceneType.Title);
             }
+            _connectCount = 0;
         }
 
 #if UNITY_EDITOR
