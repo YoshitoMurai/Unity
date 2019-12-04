@@ -12,20 +12,32 @@ namespace Connect.InGame
 {
     public class InGameManager : MonoBehaviour
     {
-        private Camera mainCamera;
-        [SerializeField] private GameObject _putObj = default;
-        [SerializeField] private int _rimitObj = 3;
-        [SerializeField] private int _strandLength = 2;
-        [SerializeField] private Cube[] _connectObj = default;
-        [SerializeField] private IngameView ingameView = default;
-        [SerializeField] private int connectCount = 0;
-        public List<Cube> putCubList = default;
+        private const string _kPathPutPrefab = "Prefabs/InGame/PutObject";
+        public void Reset()
+        {
+            var linkCubeObj = GameObject.Find("Link_Cube");
+            if (linkCubeObj != null)
+            {
+                _linkCube = linkCubeObj.GetComponent<Transform>();
+            }
+        }
 
+        [SerializeField] private GameObject _putObj       = default;
+        [SerializeField] private int        _rimitObj     = 3;
+        [SerializeField] private int        _strandLength = 2;
+        [SerializeField] private Cube[]     _connectObj   = default;
+        [SerializeField] private IngameView _ingameView   = default;
+        [SerializeField] private int        _connectCount = 0;
+        [SerializeField] private Transform  _linkCube;
+        [SerializeField] private int        _stageNum;
+
+        private Camera mainCamera;
+        public List<Cube> putCubList = default;
         private int _currentPutObj = 0;
 
         void Start()
         {
-            ingameView.InitView(1);
+            _ingameView.InitView(1);
 
             mainCamera = Camera.main;
             putCubList = new List<Cube>();
@@ -97,16 +109,16 @@ namespace Connect.InGame
                         _connectObj[i].connectFlag[j] = putCube.connectFlag[j];
                     }
                 }
-                if (putCube.connectFlag[i]) connectCount++;
+                if (putCube.connectFlag[i]) _connectCount++;
             }
 
             Observable.FromCoroutine(() => GameClear()).Subscribe();
-            connectCount = 0;
+            _connectCount = 0;
         }
 
         IEnumerator GameClear()
         {
-            if (_connectObj.Length <= connectCount)
+            if (_connectObj.Length <= _connectCount)
             {
                 yield return new WaitForSeconds(1f);
                 GameSceneManager.Instance.LoadScene(kSceneType.Title);
