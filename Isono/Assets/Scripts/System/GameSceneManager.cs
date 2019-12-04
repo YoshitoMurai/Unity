@@ -22,12 +22,14 @@ namespace Connect
 
         public void LoadScene(kSceneType type)
         {
-            FadeManager.Instance.LoadScene(type,0.5f);
+            if(FadeManager.Instance != null) FadeManager.Instance.LoadScene(type,0.5f);
+            else SceneManager.LoadScene((int)type);
         }
     }
     public enum kSceneType
     {
-        Title = 0,
-        Game = 1,
+        Splash = 0,
+        Title = 1,
+        Game = 2,
     }
 }
