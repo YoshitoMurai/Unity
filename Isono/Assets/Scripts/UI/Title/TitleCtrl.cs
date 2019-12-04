@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 using IsonoGame;
 using Connect;
 using Connect.Common;
-using UnityEngine.iOS;
 
 namespace Connect.Title
 {
@@ -57,7 +56,6 @@ namespace Connect.Title
                     break;
                 case SettingName.Rate:
                     Debug.Log("Rate");
-                    Device.RequestStoreReview();
                     //_model.SwitchActiveReview();
                     //_view.SetSettingButton(settingName, _model.userData.setting.alreadyReview);
                     break;
