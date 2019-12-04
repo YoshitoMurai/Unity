@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 8804931860450670966}
+  connectCont: 0
 --- !u!120 &8804931860450670966
 LineRenderer:
   m_ObjectHideFlags: 0

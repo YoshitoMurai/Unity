@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PutCube
   - BlockCube
+  - ConnectObj
   layers:
   - Default
   - TransparentFX
