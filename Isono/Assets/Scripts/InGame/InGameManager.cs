@@ -47,7 +47,7 @@ namespace Connect.InGame
             foreach (var dataPos in stageAsset.CubePosList)
             {
                 var connectPrefab = ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab);
-                var connectObj = Instantiate(connectPrefab, dataPos, Quaternion.identity, _linkCube);
+                var connectObj    = Instantiate(connectPrefab, dataPos, Quaternion.identity, _linkCube);
                 var connect       = connectObj.GetComponent<Cube>();
                 putCubList.Add(connect);
             }
