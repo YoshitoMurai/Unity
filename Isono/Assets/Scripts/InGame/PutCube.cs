@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace IsonoGame.InGame
+namespace Connect.InGame
 {
     public class PutCube : Cube
     {
         [SerializeField] private LineRenderer lineRenderer = default;
 
-        public void InitLineRenderer()
+        public void InitLineRenderer(int connectnumber)
         {
             lineRenderer.SetWidth(0.05f, 0.05f);
             lineRenderer.SetPosition(0, cubepos);
@@ -22,15 +22,43 @@ namespace IsonoGame.InGame
             RaycastHit hit;
 
             // Rayの可視化
-            Debug.DrawLine(lineRenderer.GetPosition(0), putcubpos, Color.red, 1f);
+            Debug.DrawLine(lineRenderer.GetPosition(0), putcubpos, Color.red, 3f);
 
             // Rayの衝突判定
             if (Physics.Linecast(lineRenderer.GetPosition(0), putcubpos, out hit))
             {
-                //Rayが当たったオブジェクトのtagがBlockCubeだったら
+                //Rayが当たったオブジェクト判定
                 switch (hit.collider.tag)
                 {
+                    case "ConnectObj":
+                        for (int i = 0; i < connectObj.Count; i++)
+                        {
+                            if (connectObj[i].transform.position == putcubpos)
+                            {
+                                connectFlag[i] = true;
+                            }
+                            else if(hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
+                            {
+                                connectFlag[i] = true;
+                            }
+                        }
+
+                        lineRenderer.positionCount++;
+                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, putcubpos);
+
+                        lineRenderer.positionCount++;
+                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, cubepos);
+                        break;
+
                     case "PutCube":
+                        for (int j = 0; j < connectObj.Count; j++)
+                        {
+                            if (hit.collider.gameObject.GetComponent<Cube>().connectFlag[j] && !connectFlag[j])
+                            {
+                                connectFlag[j] = true;
+                            }
+                        }
+
                         lineRenderer.positionCount++;
                         lineRenderer.SetPosition(lineRenderer.positionCount - 1, putcubpos);
 
