@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Cage
+  m_Shader: {fileID: 4800000, guid: 7d8e84758430c9f459dd423cd9c3971a, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 1a9722b1c9b3a904781e1239e526c2b5, type: 3}
+          m_Scale: {x: 2, y: 2}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _BumpMap
+        second:
+          m_Texture: {fileID: 2800000, guid: 946684dbac3a91d409171a7b54fa174d, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _StripeTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 26604fe163827eb4e9dd98e0f29d7461, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _BumpTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 946684dbac3a91d409171a7b54fa174d, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Hatch0Tex
+        second:
+          m_Texture: {fileID: 2800000, guid: a2e310ad5a6f21543a1a1c01606f9162, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Hatch1Tex
+        second:
+          m_Texture: {fileID: 2800000, guid: d368bd194e13afc4ebde206553f6e0c8, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Hatch2Tex
+        second:
+          m_Texture: {fileID: 2800000, guid: a179e220503963e4ab88626114fbca77, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Hatch3Tex
+        second:
+          m_Texture: {fileID: 2800000, guid: 7efd91c457d888b438139b111f220acb, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Hatch4Tex
+        second:
+          m_Texture: {fileID: 2800000, guid: 08db23147f9e7874d8f3de816219a437, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Hatch5Tex
+        second:
+          m_Texture: {fileID: 2800000, guid: 55dfeca114a42294bad26be1710ba237, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _FringeTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e3c23557c421dc24384542a1688a02d7, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Illum
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Scale
+        second: 5.5
+      data:
+        first:
+          name: _StripeWidth
+        second: .219999999
+      data:
+        first:
+          name: _StripeDensity
+        second: 18.8999996
+      data:
+        first:
+          name: _Balance
+        second: .18928571
+      data:
+        first:
+          name: _Power
+        second: 4.875
+      data:
+        first:
+          name: _OutlineWidth
+        second: .0121428575
+      data:
+        first:
+          name: _SpecPower
+        second: 7.28214502
+      data:
+        first:
+          name: _FilmDepth
+        second: .25
+      data:
+        first:
+          name: _Inset
+        second: 1
+      data:
+        first:
+          name: _Length
+        second: 26.2857151
+      data:
+        first:
+          name: _Width
+        second: 21.7142849
+      data:
+        first:
+          name: _EmissionLM
+        second: 0
+      data:
+        first:
+          name: _StripeBalance
+        second: .100000001
+    m_Colors:
+      data:
+        first:
+          name: _Color
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _StripeColor
+        second: {r: 1, g: 1, b: 0, a: 1}
+      data:
+        first:
+          name: _StripeMove
+        second: {r: 0, g: 0, b: 0, a: 0}
+      data:
+        first:
+          name: _WireColor
+        second: {r: 1, g: .800000012, b: 0, a: 1}
+      data:
+        first:
+          name: _EmptyColor
+        second: {r: 0, g: 0, b: 0, a: 0}
+      data:
+        first:
+          name: _OutlineColor
+        second: {r: 0, g: 0, b: 0, a: 0}
+      data:
+        first:
+          name: _MainTint
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _SpecularColor
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _StripeGapColor
+        second: {r: 0, g: 0, b: 0, a: 0}
