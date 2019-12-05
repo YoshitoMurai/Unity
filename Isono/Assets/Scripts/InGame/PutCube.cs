@@ -31,31 +31,16 @@ namespace Connect.InGame
                 switch (hit.collider.tag)
                 {
                     case "ConnectObj":
+                    case "PutCube":
                         for (int i = 0; i < connectObj.Count; i++)
                         {
                             if (connectObj[i].transform.position == putcubpos)
                             {
                                 connectFlag[i] = true;
                             }
-                            else if(hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
+                            else if (hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
                             {
                                 connectFlag[i] = true;
-                            }
-                        }
-
-                        lineRenderer.positionCount++;
-                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, putcubpos);
-
-                        lineRenderer.positionCount++;
-                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, cubepos);
-                        break;
-
-                    case "PutCube":
-                        for (int j = 0; j < connectObj.Count; j++)
-                        {
-                            if (hit.collider.gameObject.GetComponent<Cube>().connectFlag[j] && !connectFlag[j])
-                            {
-                                connectFlag[j] = true;
                             }
                         }
 

@@ -34,6 +34,8 @@ namespace Connect.InGame
         [SerializeField] private Transform  _linkCube;
         [SerializeField] private int        _stageNum;
 
+        [SerializeField] public GameObject _connecRanget = default;
+
         private Camera mainCamera;
         private int _currentPutObj = 0;
 
@@ -45,6 +47,9 @@ namespace Connect.InGame
                 .AddTo(gameObject);
             mainCamera = Camera.main;
             putCubList = new List<Cube>();
+
+            _connecRanget.SetActive(false);
+            _connecRanget.transform.localScale = new Vector3(_connecRanget.transform.localScale.x * _strandLength, _connecRanget.transform.localScale.y * _strandLength, 1f); ;
 
             var stageAsset = StageDataSet.Load(_stageNum);
             foreach (var dataPos in stageAsset.CubePosList)
@@ -73,26 +78,38 @@ namespace Connect.InGame
                 .AddTo(gameObject);
 
             this.UpdateAsObservable()
-                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !UITouch())
+                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !UITouchOver())
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
         }
 
-        private bool UITouch()
+        private bool UITouchOver()
         {
+            //ボタンとかクリックされていたら無効にする
             if (EventSystem.current.currentSelectedGameObject != null) { return true; }
-            if (EventSystem.current.IsPointerOverGameObject()) { return true; }
-            if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) { return true; }
+
+            //ImageとかTextでも被っていれば無効にする（マウスクリック）
+            //if (EventSystem.current.IsPointerOverGameObject()) { return true; }
+            //ImageとかTextでも被っていれば無効にする（タップ）
+            //if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) { return true; }
             return false;
         }
 
         private void KeepTouch()
         {
             var pos = mainCamera.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward);
+
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                _connecRanget.transform.position = pos;
+                _connecRanget.SetActive(true);
+            }
         }
 
         private void ReleaseTouch()
         {
+            _connecRanget.SetActive(false);
+
             var screenPoint = mainCamera.WorldToScreenPoint(transform.position);
             var offset = transform.position + Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
             _currentPutObj++;
@@ -102,7 +119,10 @@ namespace Connect.InGame
 
         private void SetStrand(PutCube putCube)
         {
-            foreach (var item in _connectObj) putCube.SetConnect(item);
+            foreach (var item in _connectObj)
+            {
+                putCube.SetConnect(item);
+            }
 
             putCube.InitLineRenderer(_connectObj.Length);
 
