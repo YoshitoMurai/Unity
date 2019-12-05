@@ -23,6 +23,7 @@ namespace Connect.InGame
                 _linkCube = linkCubeObj.GetComponent<Transform>();
             }
         }
+        private bool _isClear = false;
 
         [SerializeField] private GameObject _putObj       = default;
         [SerializeField] private int        _rimitObj     = 3;
@@ -73,12 +74,12 @@ namespace Connect.InGame
             }
 
             this.UpdateAsObservable()
-                .Where(_ => Input.GetMouseButton(0))
+                .Where(_ => Input.GetMouseButton(0) && !_isClear)
                 .Subscribe(_ => KeepTouch())
                 .AddTo(gameObject);
 
             this.UpdateAsObservable()
-                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !UITouchOver())
+                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !UITouchOver() && !_isClear)
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
         }
@@ -156,6 +157,7 @@ namespace Connect.InGame
         {
             if (_connectObj.Length <= _connectCount)
             {
+                _isClear = true;
                 _ingameView.SetActiveClear(true);
                 //yield return new WaitForSeconds(1f);
                 //GameSceneManager.Instance.LoadScene(kSceneType.Title);
@@ -165,6 +167,7 @@ namespace Connect.InGame
         void NextStage()
         {
             _ingameView.SetActiveClear(false);
+            _isClear = false;
         }
 
 #if UNITY_EDITOR

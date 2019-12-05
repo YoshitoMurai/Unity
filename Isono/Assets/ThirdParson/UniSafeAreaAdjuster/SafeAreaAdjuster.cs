@@ -125,7 +125,7 @@ namespace SafeArea {
     [SerializeField, Header("Debug"), Tooltip("Ignores when Play")]
     private SimulateData.SimulateType simulateType;
     [SerializeField, Header("Debug"), Tooltip("Ignores when Play")]
-    private bool isPortrait;
+    private bool isPortrait = default;
 
     private bool isLandscape {
       get {
