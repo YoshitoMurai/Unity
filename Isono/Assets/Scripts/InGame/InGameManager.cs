@@ -40,6 +40,9 @@ namespace Connect.InGame
         void Start()
         {
             _ingameView.InitView(1);
+            _ingameView.OnClickClear
+                .Subscribe(_ => NextStage())
+                .AddTo(gameObject);
             mainCamera = Camera.main;
             putCubList = new List<Cube>();
 
@@ -126,17 +129,22 @@ namespace Connect.InGame
                 if (putCube.connectFlag[i]) _connectCount++;
             }
 
-            Observable.FromCoroutine(() => GameClear()).Subscribe();
+            GameClear();
         }
 
-        IEnumerator GameClear()
+        void GameClear()
         {
             if (_connectObj.Length <= _connectCount)
             {
-                yield return new WaitForSeconds(1f);
-                GameSceneManager.Instance.LoadScene(kSceneType.Title);
+                _ingameView.SetActiveClear(true);
+                //yield return new WaitForSeconds(1f);
+                //GameSceneManager.Instance.LoadScene(kSceneType.Title);
             }
             _connectCount = 0;
+        }
+        void NextStage()
+        {
+            _ingameView.SetActiveClear(false);
         }
 
 #if UNITY_EDITOR

@@ -24,7 +24,7 @@ namespace SafeArea {
     }
 
     [SerializeField]
-    private bool isAutoScale;
+    private bool isAutoScale = default;
 
     private Rect safeArea;
     private Vector2Int screenSize;

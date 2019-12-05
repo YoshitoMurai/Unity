@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7351333056315787097}
   - component: {fileID: 6788612906129440561}
   - component: {fileID: 8804931860450670966}
+  - component: {fileID: -1300965900333040937}
   m_Layer: 0
   m_Name: PutObject
   m_TagString: PutCube
@@ -106,8 +107,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8878117d5b921b4fbacd0be5223fa7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectFlag: 
+  connectObj: []
   lineRenderer: {fileID: 8804931860450670966}
-  connectCont: 0
 --- !u!120 &8804931860450670966
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -203,3 +205,15 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!114 &-1300965900333040937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3348134785906540799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 806e2961008a7e34b88afaa303f37397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
