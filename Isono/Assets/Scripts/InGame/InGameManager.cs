@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.UI;
 using Connect.InGame.UI;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -79,7 +80,7 @@ namespace Connect.InGame
                 .AddTo(gameObject);
 
             this.UpdateAsObservable()
-                .Where(_ => Input.GetMouseButtonUp(0) && _currentPutObj < _rimitObj && !UITouchOver() && !_isClear)
+                .Where(_ => Input.GetMouseButtonUp(0) && !UITouchOver() && !_isClear)
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
         }
@@ -98,6 +99,9 @@ namespace Connect.InGame
 
         private void KeepTouch()
         {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit = new RaycastHit();
+
             var pos = mainCamera.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward);
 
             if (EventSystem.current.currentSelectedGameObject == null)
@@ -105,17 +109,33 @@ namespace Connect.InGame
                 _connecRanget.transform.position = pos;
                 _connecRanget.SetActive(true);
             }
+
+            // オブジェクトが生成できない場合に範囲UIを赤くする
+            if (Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit))
+            {
+                _connecRanget.GetComponent<Image>().color = new Color(1.0f, 0.3f, 0.3f, 0.3f);
+            }
+            else
+            {
+                _connecRanget.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.3f);
+            }
         }
 
         private void ReleaseTouch()
         {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit = new RaycastHit();
+
             _connecRanget.SetActive(false);
 
-            var screenPoint = mainCamera.WorldToScreenPoint(transform.position);
-            var offset = transform.position + Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
-            _currentPutObj++;
-
-            SetStrand(Instantiate(_putObj, offset, new Quaternion()).GetComponent<PutCube>());
+            // オブジェクトがあった場合は、生成させない
+            if (!Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit) && _currentPutObj < _rimitObj)
+            {
+                var screenPoint = mainCamera.WorldToScreenPoint(transform.position);
+                var offset = transform.position + Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+                _currentPutObj++;
+                SetStrand(Instantiate(_putObj, offset, new Quaternion()).GetComponent<PutCube>());
+            }
         }
 
         private void SetStrand(PutCube putCube)
@@ -164,6 +184,7 @@ namespace Connect.InGame
             }
             _connectCount = 0;
         }
+
         void NextStage()
         {
             _ingameView.SetActiveClear(false);
