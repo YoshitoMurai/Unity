@@ -14,14 +14,14 @@ void Skin3_float(in float2 uv,in float time, out float3 col)
 {
 	float2 p = uv*0.1;
 
-	float s = sin(time * 10.0) * cos(time * 120.0 + 32.0);
-	float ss = s > 0.1 ? s * sin(floor(p.y * 32.0) / 32.0) * 0.4 - 0.2 : 0.0;
-	ss *= 0.05;
+	float s = sin(time * 100.0) * cos(time * 120.0 + 32.0);
+	float ss = s > 0.9 ? s * sin(floor(p.y * 32.0) / 32.0) * 0.4 - 0.2 : 0.0;
+	ss *= 0.5;
 	time *= 20;
 	float3 color = float3(
 		dia(float2(p.x + ss * floor(p.y * 16.0) / 16.0, p.y),time),
-		dia(p + 0.002,time),
-		dia(p,time)
+		dia(p + 0.2,time),
+		dia(p-0.2,time)
 	);
 	float gray = dot(color.rgb, float3(0.299, 0.587, 0.114));
 	col = float3(gray,gray,gray);
