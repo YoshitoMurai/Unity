@@ -14,5 +14,11 @@ namespace Connect.InGame
             connectObj.Add(connect);
             connectFlag.Add(false);
         }
+
+        public void Clear()
+        {
+            connectObj.Clear();
+            connectFlag.Clear();
+        }
     }
 }
