@@ -16,6 +16,10 @@ namespace Connect.InGame
     public class InGameManager : MonoBehaviour
     {
         private const string _kPathCunnectCubePrefab = "Prefabs/InGame/ConnectCube";
+
+        private const int _kKeyPutCube   = 0;
+        private const int _kKeyStageCube = 1;
+
         public void Reset()
         {
             var linkCubeObj = GameObject.Find("Link_Cube");
@@ -32,14 +36,16 @@ namespace Connect.InGame
         [SerializeField] private Cube[]     _connectObj   = default;
         [SerializeField] private IngameView _ingameView   = default;
         [SerializeField] private int        _connectCount = 0;
-        public List<Cube> putCubList = default;
+        public List<Cube> cubeList = default;
         [SerializeField] private Transform  _linkCube;
+        [SerializeField] private Transform  _cacheCube;
         [SerializeField] private int        _stageNum;
 
         [SerializeField] public GameObject _connecRanget = default;
 
         private Camera mainCamera;
         private int _currentPutObj = 0;
+        private Dictionary<int, List<Cube>> _cacheCubeDict = new Dictionary<int, List<Cube>>();
 
         void Start()
         {
@@ -48,31 +54,12 @@ namespace Connect.InGame
                 .Subscribe(_ => NextStage())
                 .AddTo(gameObject);
             mainCamera = Camera.main;
-            putCubList = new List<Cube>();
 
             _connecRanget.SetActive(false);
             _connecRanget.transform.localScale = new Vector3(_connecRanget.transform.localScale.x * _strandLength, _connecRanget.transform.localScale.y * _strandLength, 1f); ;
 
-            var stageAsset = StageDataSet.Load(_stageNum);
-            foreach (var dataPos in stageAsset.CubePosList)
-            {
-                var connectPrefab = ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab);
-                var connectObj    = Instantiate(connectPrefab, dataPos, Quaternion.identity, _linkCube);
-                var connect       = connectObj.GetComponent<Cube>();
-                putCubList.Add(connect);
-            }
-
-            _connectObj = putCubList.ToArray();
-            putCubList.Clear();
-
-            foreach (var item in _connectObj)
-            {
-                putCubList.Add(item);
-                for (int i = 0; i < _connectObj.Length; i++)
-                {
-                    _connectObj[i].SetConnect(item);
-                }
-            }
+            // ステージ生成.
+            createStage(_stageNum);
 
             this.UpdateAsObservable()
                 .Where(_ => Input.GetMouseButton(0) && !_isClear)
@@ -83,6 +70,51 @@ namespace Connect.InGame
                 .Where(_ => Input.GetMouseButtonUp(0) && !UITouchOver() && !_isClear)
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
+        }
+
+        private void createStage(int stageNum)
+        {
+            var stageAsset = StageDataSet.Load(stageNum);
+            if (stageAsset == null)
+            {
+                Debug.LogError("存在しないステージを生成しようとしています");
+                return;
+            }
+
+            if( cubeList == null )
+            {
+                cubeList = new List<Cube>();
+            }
+            cubeList.Clear();
+
+            foreach (var dataPos in stageAsset.CubePosList)
+            {
+                var cube = getCacheCube<StageCube>(_kKeyStageCube);
+                if (cube == null)
+                {
+                    var cubePrefab = ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab);
+                    var cubeObj    = Instantiate(cubePrefab, dataPos, Quaternion.identity, _linkCube);
+                    cube           = cubeObj.GetComponent<StageCube>();
+                }
+                else
+                {
+                    cube.transform.localPosition = dataPos;
+                    cube.transform.SetParent(_linkCube);
+                }
+                cubeList.Add(cube);
+            }
+
+            _connectObj = cubeList.ToArray();
+            cubeList.Clear();
+
+            foreach (var item in _connectObj)
+            {
+                cubeList.Add(item);
+                for (int i = 0; i < _connectObj.Length; i++)
+                {
+                    _connectObj[i].SetConnect(item);
+                }
+            }
         }
 
         private bool UITouchOver()
@@ -134,7 +166,19 @@ namespace Connect.InGame
                 var screenPoint = mainCamera.WorldToScreenPoint(transform.position);
                 var offset = transform.position + Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
                 _currentPutObj++;
-                SetStrand(Instantiate(_putObj, offset, new Quaternion()).GetComponent<PutCube>());
+
+                PutCube cube = getCacheCube<PutCube>(_kKeyPutCube);
+                if (cube == null)
+                {
+                    var putObj = Instantiate(_putObj, offset, new Quaternion(), _linkCube);
+                    cube = putObj.GetComponent<PutCube>();
+                }
+                else
+                {
+                    cube.transform.localPosition = offset;
+                    cube.transform.SetParent(_linkCube);
+                }
+                SetStrand(cube);
             }
         }
 
@@ -147,7 +191,7 @@ namespace Connect.InGame
 
             putCube.InitLineRenderer(_connectObj.Length);
 
-            foreach (var putcubelist in putCubList)
+            foreach (var putcubelist in cubeList)
             {
                 if (Vector2.Distance(putCube.cubepos, putcubelist.cubepos) < _strandLength)
                 {
@@ -155,7 +199,7 @@ namespace Connect.InGame
                 }
             }
 
-            putCubList.Add(putCube);
+            cubeList.Add(putCube);
 
             // つながっているオブジェクト判定を更新
             for (int i = 0; i < _connectObj.Length; i++)
@@ -185,10 +229,67 @@ namespace Connect.InGame
             _connectCount = 0;
         }
 
-        void NextStage()
+        private void NextStage()
         {
             _ingameView.SetActiveClear(false);
+
             _isClear = false;
+
+            cacheStarg();
+
+            _currentPutObj = 0;
+            _connectObj = null;
+
+            createStage(++_stageNum);
+        }
+
+        private void cacheStarg()
+        {
+            foreach (var cube in cubeList)
+            {
+                int index;
+                // タッチで生成するオブジェクト.
+                switch (cube)
+                {
+                    case PutCube putCube:     index = _kKeyPutCube;   break;
+                    case StageCube StageCube: index = _kKeyStageCube; break;
+                    default:
+                        Debug.Log("未定義のCubeがあります");
+                        continue;
+                }
+
+                List<Cube> cacheList;
+                if (_cacheCubeDict.TryGetValue(index, out cacheList) == false)
+                {
+                    cacheList = new List<Cube>();
+                    _cacheCubeDict.Add(index, cacheList);
+                }
+
+                cacheList.Add(cube);
+                cube.gameObject.SetActive(false);
+                cube.transform.SetParent(_cacheCube);
+                cube.Clear();
+            }
+        }
+
+        private T getCacheCube<T>(int key) where T : Cube
+        {
+            T cube = null;
+            List<Cube> list;
+            if (_cacheCubeDict.TryGetValue(key, out list))
+            {
+                Debug.Log("count :" + list.Count);
+
+
+                cube = list[0] as T;
+                cube.gameObject.SetActive(true);
+                list.RemoveAt(0);
+                if (list.Count == 0)
+                {
+                    _cacheCubeDict.Remove(key);
+                }
+            }
+            return cube;
         }
 
 #if UNITY_EDITOR
