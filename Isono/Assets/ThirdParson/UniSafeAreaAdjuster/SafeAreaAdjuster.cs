@@ -24,7 +24,7 @@ namespace SafeArea {
     }
 
     [SerializeField]
-    private bool isAutoScale;
+    private bool isAutoScale = default;
 
     private Rect safeArea;
     private Vector2Int screenSize;
@@ -125,7 +125,7 @@ namespace SafeArea {
     [SerializeField, Header("Debug"), Tooltip("Ignores when Play")]
     private SimulateData.SimulateType simulateType;
     [SerializeField, Header("Debug"), Tooltip("Ignores when Play")]
-    private bool isPortrait;
+    private bool isPortrait = default;
 
     private bool isLandscape {
       get {

@@ -20,6 +20,12 @@ namespace Connect.InGame.UI
         [SerializeField] private Button _unlockButton = default;
         [SerializeField] private Button[] _skinButton = default;
 
+        [Header("Clear")]
+        [SerializeField] private Button _clearbg = default;
+        public IObservable<Unit> OnClickClear => _clearbg.OnClickAsObservable();
+
+        [SerializeField] private GraphicRaycaster _graphicRaycaster = default;
+
         // Start is called before the first frame update
         public void InitView(int stageNum)
         {
@@ -34,11 +40,27 @@ namespace Connect.InGame.UI
                 var index = i;
                 _skinButton[index].OnClickAsObservable().Subscribe(_ => Debug.Log(index));
             }
-            _stageText.text = $"STAGE {1}";
+            _stageText.text = $"STAGE {stageNum}";
+
+            _clearbg.GetComponent<CanvasGroup>().alpha = 0;
         }
         public void SetStageName(int stageNum)
         {
             _stageText.text = $"STAGE {stageNum}";
+        }
+        public void SetActiveClear(bool isActive)
+        {
+            var cd = _clearbg.GetComponent<CanvasGroup>();
+
+            if (isActive)
+            {
+                _clearbg.gameObject.SetActive(true);
+                _clearbg.GetComponent<Fade>().FadeIn(cd, 1.0f, _graphicRaycaster);
+            }
+            else
+            {
+                _clearbg.GetComponent<Fade>().FadeOut(cd, 1.0f, _graphicRaycaster);
+            }
         }
     }
 }

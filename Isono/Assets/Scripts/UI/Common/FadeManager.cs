@@ -39,7 +39,6 @@ namespace Connect
 
 
         private float fadeAlpha = 0;
-        private bool isFading = false;
 
 
         public void Awake()
@@ -60,7 +59,6 @@ namespace Connect
         {
             graphicRaycaster.enabled = true;
             //だんだん暗く .
-            this.isFading = true;
             float time = 0;
             while (time <= interval)
             {
@@ -82,7 +80,6 @@ namespace Connect
                 yield return 0;
             }
             _fadeImage.color = new Color(0, 0, 0, 0);
-            this.isFading = false;
             graphicRaycaster.enabled = false;
         }
     }
