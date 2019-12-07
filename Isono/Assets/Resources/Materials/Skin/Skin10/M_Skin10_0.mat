@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Skin8_1
-  m_Shader: {fileID: -6465566751694194690, guid: 86544443565120d4aa27a09f17f8f783,
+  m_Name: M_Skin10_0
+  m_Shader: {fileID: -6465566751694194690, guid: c068dead3bc00604db35468f4772576e,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -49,6 +49,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_56C2A135: 20
+    - Vector1_D6F77D7E: 0.5
+    - Vector1_F9F9A3B8: 2
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -71,9 +74,13 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_A0C43AE3: {r: 1, g: 0, b: 0.25, a: 0}
-    - Color_B12F6A8: {r: 1.5, g: 0, b: 0, a: 0}
-    - Color_D69D4AAD: {r: 0.4301988, g: 0, b: 0, a: 0}
+    - Color_25753E89: {r: 0, g: 0.6759999, b: 1, a: 0}
+    - Color_A0C43AE3: {r: 0, g: 0.9999999, b: 0.9999999, a: 0}
+    - Color_B12F6A8: {r: 0, g: 0.65, b: 0.65, a: 0}
+    - Color_D69D4AAD: {r: 0, g: 0.65205944, b: 0.65205944, a: 0}
+    - Color_E33FF1E2: {r: 1, g: 0, b: 0.587409, a: 1}
+    - Vector2_8ED6CCB1: {r: 0, g: 0.5, b: 0, a: 0}
+    - Vector2_E4ABD0B3: {r: 0.1, g: -0.5, b: 0, a: 0}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
