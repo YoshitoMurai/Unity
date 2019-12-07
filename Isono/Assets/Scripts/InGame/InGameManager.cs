@@ -278,9 +278,6 @@ namespace Connect.InGame
             List<Cube> list;
             if (_cacheCubeDict.TryGetValue(key, out list))
             {
-                Debug.Log("count :" + list.Count);
-
-
                 cube = list[0] as T;
                 cube.gameObject.SetActive(true);
                 list.RemoveAt(0);
