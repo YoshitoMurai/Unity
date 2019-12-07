@@ -24,6 +24,7 @@ void Skin3_float(in float2 uv,in float time, out float3 col)
 		dia(p-0.2,time)
 	);
 	float gray = dot(color.rgb, float3(0.299, 0.587, 0.114));
+	gray = clamp(0, 1, gray);
 	col = float3(gray,gray,gray);
 	
 }

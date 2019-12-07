@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Skin2_2
-  m_Shader: {fileID: -6465566751694194690, guid: f1edde7cf3860f8439257a73b3862c25,
+  m_Name: M_Skin4_2
+  m_Shader: {fileID: -6465566751694194690, guid: 291086dece283bc43a07c2ed08faeb3f,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -71,7 +71,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_A0C43AE3: {r: 1, g: 0.7, b: 0, a: 0}
+    - Color_A0C43AE3: {r: 1.3041189, g: 0.87396455, b: 0, a: 0}
     - Color_D69D4AAD: {r: 0.7490196, g: 0.5019608, b: 0.015686275, a: 0}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}

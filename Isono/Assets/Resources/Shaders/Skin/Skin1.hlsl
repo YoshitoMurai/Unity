@@ -10,7 +10,6 @@ void Skin1_float(in float2 uv, in float2 res,in float time, out float3 col)
 	float2 pos = uv.xy;
 	float2 p = 40.0f * pos;
 	float s = sin(dot(p, p) / -64. + time);
-	//col = float3(s, s, s);
 	s = pow(abs(s), 0.5) * sign(s);
 	float  r = .35 + .25 * s;
 	float t =0.8;
