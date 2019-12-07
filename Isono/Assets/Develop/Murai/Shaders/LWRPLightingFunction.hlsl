@@ -53,7 +53,7 @@ void LWRPLightingFunction_float (in float2 uv, in float time, in float3 color, o
 {
    float v = 0.0f;
    float a = 1.2f;
-   float f = 2.5f;
+   float f = 0.5f;
    
    for(int i = 1; i < 3; i ++) // 4 octaves also look nice, its getting a bit slow though
    {  
@@ -92,7 +92,8 @@ void LWRPLightingFunction_float (in float2 uv, in float time, in float3 color, o
    float3 cexp = color;
    cexp *= 1.3;
    col = float3(pow(v, cexp.x), pow(v, cexp.y), pow(v, cexp.z)) * 2.0;
-   float gray = (uv.x + uv.y) / 2;
-   col *= col;
+   float gray = dot(col, float3(0.299, 0.587, 0.114));
+   col = float3(gray, gray, gray);
+   col = pow(col,0.7);
    //if (col.g > 0.99) col = float3(1, 1, 0);
 }
