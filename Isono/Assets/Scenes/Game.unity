@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -779,6 +779,17 @@ MonoBehaviour:
   _cacheCube: {fileID: 96361918}
   _stageNum: 1
   _connecRanget: {fileID: 1578998969}
+  _cubeObj: []
+  skin:
+  - {fileID: 2100000, guid: 6a4a63fc05d093f469b1519f22d903a9, type: 2}
+  - {fileID: 2100000, guid: 6ebcd22bc438ccc45a6418d12700b69a, type: 2}
+  - {fileID: 2100000, guid: 4e4ad5bbc9bb7e849a577e9bac43fb4b, type: 2}
+  - {fileID: 2100000, guid: f9ab26a0151de8f44bd5336b7419ad82, type: 2}
+  - {fileID: 2100000, guid: 52e50b8871a4c334583f892e86320bdc, type: 2}
+  - {fileID: 2100000, guid: 907149a92fa788e43895b08ed1c6db77, type: 2}
+  - {fileID: 2100000, guid: 16d9125571fe43244825cd6e5860e03a, type: 2}
+  - {fileID: 2100000, guid: 99ec3be50f243024eb41b13031eaa878, type: 2}
+  - {fileID: 2100000, guid: 5e86db3fabec45d478fc55603aa54707, type: 2}
 --- !u!4 &449906569
 Transform:
   m_ObjectHideFlags: 0

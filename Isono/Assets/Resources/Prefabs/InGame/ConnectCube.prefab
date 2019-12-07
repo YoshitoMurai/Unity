@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5702461915491659155}
   - component: {fileID: 5702461915491659152}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: ConnectCube
   m_TagString: ConnectObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,4 +107,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectFlag: 
   connectObj: []
-  connectCount: 0

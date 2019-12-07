@@ -41,7 +41,11 @@ namespace Connect.InGame
         [SerializeField] private Transform  _cacheCube;
         [SerializeField] private int        _stageNum;
 
-        [SerializeField] public GameObject _connecRanget = default;
+        public GameObject _connecRanget = default;
+
+        public Material[] skin = default;
+        [SerializeField] private List<GameObject> _cubeObj = default;
+
 
         private Camera mainCamera;
         private int _currentPutObj = 0;
@@ -70,6 +74,10 @@ namespace Connect.InGame
                 .Where(_ => Input.GetMouseButtonUp(0) && !UITouchOver() && !_isClear)
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
+
+            // スキン変更
+            _ingameView.OnClickSkin.Subscribe(index => SkinChange(index)).AddTo(gameObject);
+
         }
 
         private void createStage(int stageNum)
@@ -106,10 +114,12 @@ namespace Connect.InGame
 
             _connectObj = cubeList.ToArray();
             cubeList.Clear();
+            _cubeObj.Add(_putObj.gameObject);
 
             foreach (var item in _connectObj)
             {
                 cubeList.Add(item);
+                _cubeObj.Add(item.gameObject);
                 for (int i = 0; i < _connectObj.Length; i++)
                 {
                     _connectObj[i].SetConnect(item);
@@ -131,7 +141,7 @@ namespace Connect.InGame
 
         private void KeepTouch()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
 
             var pos = mainCamera.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward);
@@ -155,7 +165,7 @@ namespace Connect.InGame
 
         private void ReleaseTouch()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
 
             _connecRanget.SetActive(false);
@@ -200,6 +210,7 @@ namespace Connect.InGame
             }
 
             cubeList.Add(putCube);
+            _cubeObj.Add(putCube.gameObject);
 
             // つながっているオブジェクト判定を更新
             for (int i = 0; i < _connectObj.Length; i++)
@@ -227,6 +238,14 @@ namespace Connect.InGame
                 //GameSceneManager.Instance.LoadScene(kSceneType.Title);
             }
             _connectCount = 0;
+        }
+
+        private void SkinChange(int index)
+        {
+            for (int i = 0; i < _cubeObj.Count; i++)
+            {
+                _cubeObj[i].GetComponent<Renderer>().material = skin[index];
+            }
         }
 
         private void NextStage()
