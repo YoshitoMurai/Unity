@@ -791,6 +791,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5e86db3fabec45d478fc55603aa54707, type: 2}
   - {fileID: 2100000, guid: 9a88a9a8eb12fab41a44bcb9c55b40ea, type: 2}
   - {fileID: 2100000, guid: 8dd7fbe6086e36b45bfdeb215d4958ab, type: 2}
+  - {fileID: 2100000, guid: 958bdff1d00c7e747b954db991d18c6a, type: 2}
   _cubeObj: []
 --- !u!4 &449906569
 Transform:
@@ -882,7 +883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 8dd7fbe6086e36b45bfdeb215d4958ab, type: 2}
+  m_Material: {fileID: 2100000, guid: 958bdff1d00c7e747b954db991d18c6a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
