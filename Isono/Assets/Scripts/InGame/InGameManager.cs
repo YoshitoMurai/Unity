@@ -114,7 +114,9 @@ namespace Connect.InGame
 
             _connectObj = cubeList.ToArray();
             cubeList.Clear();
+            _cubeObj.Clear();
             _cubeObj.Add(_putObj.gameObject);
+            _cubeObj.Add(ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab));
 
             foreach (var item in _connectObj)
             {
@@ -141,10 +143,9 @@ namespace Connect.InGame
 
         private void KeepTouch()
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray        = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
-
-            var pos = mainCamera.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward);
+            var pos        = mainCamera.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward);
 
             if (EventSystem.current.currentSelectedGameObject == null)
             {
@@ -165,7 +166,7 @@ namespace Connect.InGame
 
         private void ReleaseTouch()
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray        = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
 
             _connecRanget.SetActive(false);
@@ -174,14 +175,14 @@ namespace Connect.InGame
             if (!Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit) && _currentPutObj < _rimitObj)
             {
                 var screenPoint = mainCamera.WorldToScreenPoint(transform.position);
-                var offset = transform.position + Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+                var offset = transform.position + mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
                 _currentPutObj++;
 
                 PutCube cube = getCacheCube<PutCube>(_kKeyPutCube);
                 if (cube == null)
                 {
                     var putObj = Instantiate(_putObj, offset, new Quaternion(), _linkCube);
-                    cube = putObj.GetComponent<PutCube>();
+                    cube       = putObj.GetComponent<PutCube>();
                 }
                 else
                 {
@@ -209,9 +210,6 @@ namespace Connect.InGame
                 }
             }
 
-            cubeList.Add(putCube);
-            _cubeObj.Add(putCube.gameObject);
-
             // つながっているオブジェクト判定を更新
             for (int i = 0; i < _connectObj.Length; i++)
             {
@@ -225,6 +223,9 @@ namespace Connect.InGame
                 if (putCube.connectFlag[i]) _connectCount++;
             }
 
+            cubeList.Add(putCube);
+            _cubeObj.Add(putCube.gameObject);
+
             GameClear();
         }
 
@@ -234,8 +235,6 @@ namespace Connect.InGame
             {
                 _isClear = true;
                 _ingameView.SetActiveClear(true);
-                //yield return new WaitForSeconds(1f);
-                //GameSceneManager.Instance.LoadScene(kSceneType.Title);
             }
             _connectCount = 0;
         }
@@ -288,6 +287,12 @@ namespace Connect.InGame
                 cube.gameObject.SetActive(false);
                 cube.transform.SetParent(_cacheCube);
                 cube.Clear();
+
+                if (cube.gameObject.tag == "PutCube")
+                {
+                    var lineCube = cube.GetComponent<PutCube>();
+                    lineCube.InitLineReset();
+                }
             }
         }
 

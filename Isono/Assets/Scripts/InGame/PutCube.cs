@@ -7,6 +7,11 @@ namespace Connect.InGame
     {
         [SerializeField] private LineRenderer lineRenderer = default;
 
+        public void InitLineReset()
+        {
+            lineRenderer.positionCount = 1;
+        }
+
         public void InitLineRenderer(int connectnumber)
         {
             lineRenderer.SetWidth(0.05f, 0.05f);
@@ -32,13 +37,10 @@ namespace Connect.InGame
                 {
                     case "ConnectObj":
                     case "PutCube":
+
                         for (int i = 0; i < connectObj.Count; i++)
                         {
-                            if (connectObj[i].transform.position == putcubpos)
-                            {
-                                connectFlag[i] = true;
-                            }
-                            else if (hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
+                            if (connectObj[i].transform.position == putcubpos || hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
                             {
                                 connectFlag[i] = true;
                             }
