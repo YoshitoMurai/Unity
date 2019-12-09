@@ -48,7 +48,7 @@ namespace Connect.Common
             selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
             selectMaterial = 0;
             material = PlayerPrefs.GetInt(CommonInfo.UNSEALED_SKIN);
-            material = 100;
+            material = 4095;
             sealedMaterial = new bool[CommonInfo.SKIN_NUM];
             for (int i = 0; i < CommonInfo.SKIN_NUM; i++)
             {
