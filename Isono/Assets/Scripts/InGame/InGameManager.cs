@@ -8,6 +8,7 @@ using System.Collections;
 using UnityEngine.UI;
 using Connect.InGame.UI;
 using Connect.Common;
+using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,6 +17,7 @@ namespace Connect.InGame
 {
     public class InGameManager : MonoBehaviour
     {
+        private const string _kSkin = "Materials/Skin/Skin";
         private const string _kPathCunnectCubePrefab = "Prefabs/InGame/ConnectCube";
 
         private const int _kKeyPutCube   = 0;
@@ -44,7 +46,6 @@ namespace Connect.InGame
 
         public GameObject _connecRanget = default;
 
-        public Material[] skin = default;
         [SerializeField] private List<GameObject> _cubeObj = default;
 
 
@@ -85,7 +86,6 @@ namespace Connect.InGame
                     UserData.Instance.SetMaterial(index);
                     SkinChange(index);
                 }).AddTo(gameObject);
-
         }
 
         private void createStage(int stageNum)
@@ -249,9 +249,28 @@ namespace Connect.InGame
 
         private void SkinChange(int index)
         {
+            var concatSkinName = String.Concat(_kSkin + index + "/");;
+            var putSkinName = concatSkinName;
+
+            concatSkinName  = String.Concat(concatSkinName + "M_Skin" + index + "_0");
+            putSkinName = String.Concat(putSkinName + "M_Skin" + index + "_2");
+
             for (int i = 0; i < _cubeObj.Count; i++)
             {
-                _cubeObj[i].GetComponent<Renderer>().material = skin[index];
+                switch (_cubeObj[i].tag)
+                {
+                    case "ConnectObj":
+                        var concatSkinMaterial = ResourceManager.Load<Material>(concatSkinName);
+                        _cubeObj[i].GetComponent<Renderer>().material = concatSkinMaterial;
+                        break;
+
+                    case "PutCube":
+                        var putSkinMaterial = ResourceManager.Load<Material>(putSkinName);
+                        _cubeObj[i].GetComponent<Renderer>().material = putSkinMaterial;
+                        break;
+
+                    default: Debug.Log("スキンがねぇな"); break;
+                }
             }
         }
 
