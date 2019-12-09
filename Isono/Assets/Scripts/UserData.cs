@@ -9,6 +9,9 @@ namespace Connect.Common
         public int clearStage { get; set; }
         public bool onSound { get; private set; }
         public bool onVibration { get; private set; }
+        public int selectMaterial { get; private set; }
+        private int material;
+        public bool[] sealedMaterial { get; private set; }
         #region Singleton
 
         private static UserData instance;
@@ -41,6 +44,15 @@ namespace Connect.Common
 
             onSound = (settingFlag & 0001) != 0;
             onVibration = (settingFlag & 0010) != 0;
+
+            selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_MATERIAL);
+            material = PlayerPrefs.GetInt(CommonInfo.UNSEALED_MATERIAL);
+            material = 1300;
+            sealedMaterial = new bool[CommonInfo.MATERIAL_NUM];
+            for (int i = 0; i < CommonInfo.MATERIAL_NUM; i++)
+            {
+                sealedMaterial[i] = (material & (1 << i)) != 0;
+            }
             DontDestroyOnLoad(gameObject);
         }
         public void SaveSetting()
@@ -63,6 +75,19 @@ namespace Connect.Common
         public void SetClearStage(int num)
         {
             PlayerPrefs.SetInt(CommonInfo.CLEAR_STAGE_NUM, num);
+            Save();
+        }
+        public void SetMaterial(int num)
+        {
+            selectMaterial = num;
+            PlayerPrefs.SetInt(CommonInfo.SELECT_MATERIAL, num);
+            Save();
+        }
+        public void AddMaterial(int num)
+        {
+            material +=  1  << num;
+            sealedMaterial[num] = true;
+            PlayerPrefs.SetInt(CommonInfo.UNSEALED_MATERIAL, material);
             Save();
         }
         private void Save()

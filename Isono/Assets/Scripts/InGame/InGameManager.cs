@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
 using Connect.InGame.UI;
+using Connect.Common;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -75,8 +76,15 @@ namespace Connect.InGame
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
 
+            SkinChange(UserData.Instance.selectMaterial);
+
             // スキン変更
-            _ingameView.OnClickSkin.Subscribe(index => SkinChange(index)).AddTo(gameObject);
+            _ingameView.OnClickSkin
+                .Subscribe(index =>
+                {
+                    UserData.Instance.SetMaterial(index);
+                    SkinChange(index);
+                }).AddTo(gameObject);
 
         }
 
