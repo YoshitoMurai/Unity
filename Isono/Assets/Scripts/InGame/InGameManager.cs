@@ -249,6 +249,9 @@ namespace Connect.InGame
 
         private void SkinChange(int index)
         {
+            UserData.Instance.SetMaterial(index);
+            _ingameView.SetSelectButton(index);
+
             var concatSkinName = String.Concat(_kSkin + index + "/");;
             var putSkinName = concatSkinName;
 

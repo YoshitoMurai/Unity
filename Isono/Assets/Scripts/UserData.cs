@@ -45,11 +45,12 @@ namespace Connect.Common
             onSound = (settingFlag & 0001) != 0;
             onVibration = (settingFlag & 0010) != 0;
 
-            selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_MATERIAL);
-            material = PlayerPrefs.GetInt(CommonInfo.UNSEALED_MATERIAL);
-            material = 1300;
-            sealedMaterial = new bool[CommonInfo.MATERIAL_NUM];
-            for (int i = 0; i < CommonInfo.MATERIAL_NUM; i++)
+            selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
+            selectMaterial = 0;
+            material = PlayerPrefs.GetInt(CommonInfo.UNSEALED_SKIN);
+            material = 100;
+            sealedMaterial = new bool[CommonInfo.SKIN_NUM];
+            for (int i = 0; i < CommonInfo.SKIN_NUM; i++)
             {
                 sealedMaterial[i] = (material & (1 << i)) != 0;
             }
@@ -80,14 +81,14 @@ namespace Connect.Common
         public void SetMaterial(int num)
         {
             selectMaterial = num;
-            PlayerPrefs.SetInt(CommonInfo.SELECT_MATERIAL, num);
+            PlayerPrefs.SetInt(CommonInfo.SELECT_SKIN, num);
             Save();
         }
         public void AddMaterial(int num)
         {
             material +=  1  << num;
             sealedMaterial[num] = true;
-            PlayerPrefs.SetInt(CommonInfo.UNSEALED_MATERIAL, material);
+            PlayerPrefs.SetInt(CommonInfo.UNSEALED_SKIN, material);
             Save();
         }
         private void Save()

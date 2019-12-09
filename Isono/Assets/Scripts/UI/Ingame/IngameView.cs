@@ -4,6 +4,7 @@ using UniRx;
 using System;
 using TMPro;
 using Connect;
+using Connect.Common;
 
 namespace Connect.InGame.UI
 {
@@ -18,7 +19,8 @@ namespace Connect.InGame.UI
         [Header("SkinChange")]
         [SerializeField] private Button _skinBackButton = default;
         [SerializeField] private Button _unlockButton = default;
-        [SerializeField] private Button[] _skinButton = default;
+        [SerializeField] private SkinButton[] _skinButton = default;
+        private int selectSkin;
 
         [Header("Clear")]
         [SerializeField] private Button _clearbg = default;
@@ -36,19 +38,23 @@ namespace Connect.InGame.UI
             _skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
             _skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);
             _unlockButton.OnClickAsObservable().Subscribe(_ => AdvertiseManager.Instance.ShowMovieAds());
-            
-            OnClickSkin = _skinButton[0].OnClickAsObservable().Select(_=>0).Merge(
-                _skinButton[1].OnClickAsObservable().Select(_ => 1),
-                _skinButton[2].OnClickAsObservable().Select(_ => 2),
-                _skinButton[3].OnClickAsObservable().Select(_ => 3),
-                _skinButton[4].OnClickAsObservable().Select(_ => 4),
-                _skinButton[5].OnClickAsObservable().Select(_ => 5),
-                _skinButton[6].OnClickAsObservable().Select(_ => 6),
-                _skinButton[7].OnClickAsObservable().Select(_ => 7),
-                _skinButton[8].OnClickAsObservable().Select(_ => 8),
-                _skinButton[9].OnClickAsObservable().Select(_ => 9),
-                _skinButton[10].OnClickAsObservable().Select(_ => 10),
-                _skinButton[11].OnClickAsObservable().Select(_ => 11)
+            selectSkin = UserData.Instance.selectMaterial;
+            for (int i = 0; i < _skinButton.Length; i++)
+            {
+                _skinButton[i].Initialize(i,UserData.Instance.sealedMaterial[i], selectSkin == i);
+            }
+            OnClickSkin = _skinButton[0].OnClick.Merge(
+                _skinButton[1].OnClick,
+                _skinButton[2].OnClick,
+                _skinButton[3].OnClick,
+                _skinButton[4].OnClick,
+                _skinButton[5].OnClick,
+                _skinButton[6].OnClick,
+                _skinButton[7].OnClick,
+                _skinButton[8].OnClick,
+                _skinButton[9].OnClick,
+                _skinButton[10].OnClick,
+                _skinButton[11].OnClick
                 );
             
 
@@ -73,6 +79,16 @@ namespace Connect.InGame.UI
             {
                 _clearbg.GetComponent<Fade>().FadeOut(cd, 1.0f, _graphicRaycaster);
             }
+        }
+        public void SetSelectButton(int after)
+        {
+            _skinButton[selectSkin].SetSelect(false);
+            _skinButton[after].SetSelect(true);
+            selectSkin = after;
+        }
+        public void SetUnsealedButton(int index)
+        {
+            _skinButton[index].SetUnsealed();
         }
     }
 }
