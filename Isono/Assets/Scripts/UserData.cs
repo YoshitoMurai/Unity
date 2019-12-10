@@ -9,6 +9,9 @@ namespace Connect.Common
         public int clearStage { get; set; }
         public bool onSound { get; private set; }
         public bool onVibration { get; private set; }
+        public int selectMaterial { get; private set; }
+        private int skinData;
+        public bool[] isUnsealedSkin { get; private set; }
         #region Singleton
 
         private static UserData instance;
@@ -41,6 +44,16 @@ namespace Connect.Common
 
             onSound = (settingFlag & 0001) != 0;
             onVibration = (settingFlag & 0010) != 0;
+
+            selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
+            selectMaterial = 0;
+            skinData = PlayerPrefs.GetInt(CommonInfo.UNSEALED_SKIN);
+            skinData = 4095;
+            isUnsealedSkin = new bool[CommonInfo.SKIN_NUM];
+            for (int i = 0; i < CommonInfo.SKIN_NUM; i++)
+            {
+                isUnsealedSkin[i] = (skinData & (1 << i)) != 0;
+            }
             DontDestroyOnLoad(gameObject);
         }
         public void SaveSetting()
@@ -63,6 +76,20 @@ namespace Connect.Common
         public void SetClearStage(int num)
         {
             PlayerPrefs.SetInt(CommonInfo.CLEAR_STAGE_NUM, num);
+            Save();
+        }
+        public void SetMaterial(int num)
+        {
+            selectMaterial = num;
+            PlayerPrefs.SetInt(CommonInfo.SELECT_SKIN, num);
+            Save();
+        }
+        public void AddSkin(int num)
+        {
+            if (num == -1) return;
+            skinData +=  1  << num;
+            isUnsealedSkin[num] = true;
+            PlayerPrefs.SetInt(CommonInfo.UNSEALED_SKIN, skinData);
             Save();
         }
         private void Save()

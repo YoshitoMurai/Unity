@@ -7,9 +7,23 @@ namespace Connect.InGame
     {
         [SerializeField] private LineRenderer lineRenderer = default;
 
+        private void AddlineRenderer(Vector3 linepos)
+        {
+            lineRenderer.positionCount++;
+            lineRenderer.SetPosition(lineRenderer.positionCount - 1, linepos);
+        }
+
+        public void InitLineReset()
+        {
+            lineRenderer.positionCount = 1;
+            lineRenderer.SetPosition(0, Vector3.zero);
+        }
+
         public void InitLineRenderer(int connectnumber)
         {
-            lineRenderer.SetWidth(0.05f, 0.05f);
+            lineRenderer.startWidth = 0.05f;
+            lineRenderer.endWidth = 0.05f;
+            //lineRenderer.SetWidth(0.05f, 0.05f);
             lineRenderer.SetPosition(0, cubepos);
         }
 
@@ -30,30 +44,21 @@ namespace Connect.InGame
                 //Rayが当たったオブジェクト判定
                 switch (hit.collider.tag)
                 {
-                    case "ConnectObj":
-                    case "PutCube":
+                    case ObjectTagInfo.CONNECT_CUBE:
+                    case ObjectTagInfo.PUT_CUBE:
                         for (int i = 0; i < connectObj.Count; i++)
                         {
-                            if (connectObj[i].transform.position == putcubpos)
-                            {
-                                connectFlag[i] = true;
-                            }
-                            else if (hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
+                            if (connectObj[i].transform.position == putcubpos || 
+                                hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
                             {
                                 connectFlag[i] = true;
                             }
                         }
-
-                        lineRenderer.positionCount++;
-                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, putcubpos);
-
-                        lineRenderer.positionCount++;
-                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, cubepos);
+                        AddlineRenderer(putcubpos);
+                        AddlineRenderer(cubepos);
                         break;
 
-                    case "BlockCube":
-                        break;
-
+                    case ObjectTagInfo.BLOCK_CUBE: break;
                     default: break;
                 }
             }

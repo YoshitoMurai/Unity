@@ -72,7 +72,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_A0C43AE3: {r: 0.8603976, g: 0, b: 0, a: 0}
-    - Color_B12F6A8: {r: 1.5, g: 0, b: 0, a: 0}
+    - Color_B12F6A8: {r: 1.4142135, g: 0, b: 0.35493988, a: 0}
     - Color_D69D4AAD: {r: 0.4301988, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
