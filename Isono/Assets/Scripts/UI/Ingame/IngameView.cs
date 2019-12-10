@@ -41,7 +41,7 @@ namespace Connect.InGame.UI
             selectSkin = UserData.Instance.selectMaterial;
             for (int i = 0; i < _skinButton.Length; i++)
             {
-                _skinButton[i].Initialize(i,UserData.Instance.sealedMaterial[i], selectSkin == i);
+                _skinButton[i].Initialize(i,UserData.Instance.isUnsealedSkin[i], selectSkin == i);
             }
             OnClickSkin = _skinButton[0].OnClick.Merge(
                 _skinButton[1].OnClick,

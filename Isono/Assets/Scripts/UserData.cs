@@ -10,8 +10,8 @@ namespace Connect.Common
         public bool onSound { get; private set; }
         public bool onVibration { get; private set; }
         public int selectMaterial { get; private set; }
-        private int material;
-        public bool[] sealedMaterial { get; private set; }
+        private int skinData;
+        public bool[] isUnsealedSkin { get; private set; }
         #region Singleton
 
         private static UserData instance;
@@ -47,12 +47,12 @@ namespace Connect.Common
 
             selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
             selectMaterial = 0;
-            material = PlayerPrefs.GetInt(CommonInfo.UNSEALED_SKIN);
-            material = 4095;
-            sealedMaterial = new bool[CommonInfo.SKIN_NUM];
+            skinData = PlayerPrefs.GetInt(CommonInfo.UNSEALED_SKIN);
+            skinData = 4095;
+            isUnsealedSkin = new bool[CommonInfo.SKIN_NUM];
             for (int i = 0; i < CommonInfo.SKIN_NUM; i++)
             {
-                sealedMaterial[i] = (material & (1 << i)) != 0;
+                isUnsealedSkin[i] = (skinData & (1 << i)) != 0;
             }
             DontDestroyOnLoad(gameObject);
         }
@@ -84,11 +84,12 @@ namespace Connect.Common
             PlayerPrefs.SetInt(CommonInfo.SELECT_SKIN, num);
             Save();
         }
-        public void AddMaterial(int num)
+        public void AddSkin(int num)
         {
-            material +=  1  << num;
-            sealedMaterial[num] = true;
-            PlayerPrefs.SetInt(CommonInfo.UNSEALED_SKIN, material);
+            if (num == -1) return;
+            skinData +=  1  << num;
+            isUnsealedSkin[num] = true;
+            PlayerPrefs.SetInt(CommonInfo.UNSEALED_SKIN, skinData);
             Save();
         }
         private void Save()

@@ -53,11 +53,17 @@ namespace Connect.InGame
         private Camera mainCamera;
         private int _currentPutObj = 0;
         private Dictionary<int, List<Cube>> _cacheCubeDict = new Dictionary<int, List<Cube>>();
+        private SkinManager skinManager;
+
 
         void Start()
         {
+            skinManager = new SkinManager();
+            skinManager.LoadSkinData();
+
             _ingameView.InitView(1);
             _ingameView.OnClickClear
+                .ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => NextStage())
                 .AddTo(gameObject);
             mainCamera = Camera.main;
@@ -82,6 +88,7 @@ namespace Connect.InGame
 
             // スキン変更
             _ingameView.OnClickSkin
+                .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                 .Subscribe(index =>
                 {
                     UserData.Instance.SetMaterial(index);
@@ -300,13 +307,11 @@ namespace Connect.InGame
                 switch (_cubeObj[i].tag)
                 {
                     case ObjectTagInfo.CONNECT_CUBE:
-                        var concatSkinMaterial = ResourceManager.Load<Material>(connectSkinName);
-                        _cubeObj[i].GetComponent<Renderer>().material = concatSkinMaterial;
+                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 2];
                         break;
 
                     case ObjectTagInfo.PUT_CUBE:
-                        var putSkinMaterial = ResourceManager.Load<Material>(putSkinName);
-                        _cubeObj[i].GetComponent<Renderer>().material = putSkinMaterial;
+                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 0];
                         break;
 
                     default: Debug.Log("スキンがねぇな"); break;
