@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 8804931860450670966}
   - component: {fileID: -1300965900333040937}
   m_Layer: 0
-  m_Name: PutObject
-  m_TagString: PutCube
+  m_Name: PutCube
+  m_TagString: PutObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8dd7fbe6086e36b45bfdeb215d4958ab, type: 2}
+  - {fileID: 2100000, guid: 1d180da818958f245a27c00b4e095955, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
