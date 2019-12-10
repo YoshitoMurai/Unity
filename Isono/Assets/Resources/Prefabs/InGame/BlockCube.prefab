@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4039099801647470828}
   m_Layer: 0
   m_Name: BlockCube
-  m_TagString: BlockCube
+  m_TagString: BlockObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
