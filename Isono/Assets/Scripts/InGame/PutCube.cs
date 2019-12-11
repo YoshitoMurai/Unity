@@ -21,8 +21,8 @@ namespace Connect.InGame
 
         public void InitLineRenderer(int connectnumber)
         {
-            lineRenderer.startWidth = 0.05f;
-            lineRenderer.endWidth = 0.05f;
+            lineRenderer.startWidth = 0.1f;
+            lineRenderer.endWidth = 0.1f;
             //lineRenderer.SetWidth(0.05f, 0.05f);
             lineRenderer.SetPosition(0, cubepos);
         }

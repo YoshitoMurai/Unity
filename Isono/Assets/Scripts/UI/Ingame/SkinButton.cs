@@ -6,7 +6,7 @@ namespace Connect.InGame.UI
 {
     public class SkinButton : MonoBehaviour
     {
-        Color unsealedColor = new Color(0.15f, 0.15f, 0.15f, 0.5f);
+        Color unsealedColor = new Color(0.15f, 0.15f, 0.15f, 0.8f);
         Color selectColor = new Color(0f, 0f, 0f, 0f);
         Color sealedColor = new Color(0.15f, 0.15f, 0.15f, 1f);
         [SerializeField] private Image image = default;
@@ -31,7 +31,6 @@ namespace Connect.InGame.UI
             }
             else
             {
-                
                 image.color = sealedColor;
             }
         }
@@ -41,7 +40,7 @@ namespace Connect.InGame.UI
         }
         public void SetUnsealed()
         {
-            unsealed = false;
+            unsealed = true;
             image.color = unsealedColor;
         }
     }
