@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5702461915491659154}
   - component: {fileID: 5702461915491659155}
   - component: {fileID: 5702461915491659152}
+  - component: {fileID: -974229344078296698}
   m_Layer: 0
   m_Name: ConnectCube
   m_TagString: ConnectObj
@@ -59,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 907149a92fa788e43895b08ed1c6db77, type: 2}
+  - {fileID: 2100000, guid: 6ebcd22bc438ccc45a6418d12700b69a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -107,3 +108,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectFlag: 
   connectObj: []
+--- !u!114 &-974229344078296698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5702461915491659165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 806e2961008a7e34b88afaa303f37397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRotate: 0

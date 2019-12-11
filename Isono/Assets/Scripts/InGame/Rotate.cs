@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Rotate : MonoBehaviour
 {
+   public bool isRotate = true;
   void Update() {
-    transform.Rotate(new Vector3(10,
-                                 60,
-                                 120
-                                ) * Time.deltaTime*0.3f);
+        if(isRotate) transform.Rotate(new Vector3(10,60,120) * Time.deltaTime*0.3f);
   }
 }
