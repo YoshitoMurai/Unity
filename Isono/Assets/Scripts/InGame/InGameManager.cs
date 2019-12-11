@@ -391,15 +391,58 @@ namespace Connect.InGame
             var asset = StageDataSet.LoadForEditor(_stageNum);
             asset.Clear();
 
-            var cubeTransformArray = _linkCube.GetComponentInChildren<Transform>();
-            foreach (Transform cubeTransform in cubeTransformArray)
+            foreach (Transform cubeTransform in _linkStageCube)
             {
                 asset.Add(cubeTransform.localPosition);
+            }
+
+            foreach (Transform cubeTransform in _linBlockCube)
+            {
+                asset.AddBlock(cubeTransform.localPosition);
             }
 
             asset.SetDirtyForEditor();
             Debug.Log(asset.name + "の生成に成功");
 
+        }
+
+        void loadAsset()
+        {
+            var asset = StageDataSet.LoadForEditor(_stageNum);
+            if( asset == null )
+            {
+                Debug.LogError("アセットが読み込めません");
+                return;
+            }
+
+            foreach (var cubeTransform in asset.CubePosList)
+            {
+                var cubePrefab = AssetDatabase.LoadAssetAtPath(_kPathFullStageCubePrefab, typeof( GameObject )) as GameObject;
+                var cubeObj    = PrefabUtility.InstantiatePrefab(cubePrefab, _linkStageCube.transform) as GameObject;
+                cubeObj.transform.localPosition = cubeTransform;
+            }
+
+            foreach (var cubeTransform in asset.CubeBlockPosList)
+            {
+                var cubePrefab = AssetDatabase.LoadAssetAtPath(_kPathFullBlockCubePrefab, typeof(GameObject)) as GameObject;
+                var cubeObj    = PrefabUtility.InstantiatePrefab(cubePrefab, _linBlockCube.transform) as GameObject;
+                cubeObj.transform.localPosition = cubeTransform;
+            }
+        }
+
+        void deleteGameObject()
+        {
+            for (int ii = _linkStageCube.childCount - 1; 0 <= ii; ii--)
+            {
+                var obj = _linkStageCube.GetChild(ii);
+                DestroyImmediate(obj.gameObject);
+            }
+
+            for (int ii = _linBlockCube.childCount - 1; 0 <= ii; ii--)
+            {
+                var obj = _linBlockCube.GetChild(ii);
+                DestroyImmediate(obj.gameObject);
+            }
         }
 
         [CustomEditor(typeof(InGameManager))]
@@ -415,6 +458,19 @@ namespace Connect.InGame
                     {
                         var manager = target as InGameManager;
                         manager.saveAsset();
+                    }
+
+                    if (GUILayout.Button("Load", GUILayout.Width(100), GUILayout.Height(30)))
+                    {
+                        var manager = target as InGameManager;
+                        manager.deleteGameObject();
+                        manager.loadAsset();
+                    }
+
+                    if (GUILayout.Button("Destory", GUILayout.Width(100), GUILayout.Height(30)))
+                    {
+                        var manager = target as InGameManager;
+                        manager.deleteGameObject();
                     }
                 }
             }
