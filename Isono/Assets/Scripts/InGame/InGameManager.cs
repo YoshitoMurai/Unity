@@ -18,17 +18,23 @@ namespace Connect.InGame
     public class InGameManager : MonoBehaviour
     {
         private const string _kSkin = "Materials/Skin/Skin{0}/M_Skin{0}_{1}";
-        private const string _kPathCunnectCubePrefab = "Prefabs/InGame/ConnectCube";
 
-        private const int _kKeyPutCube = 0;
+        private const string _kPathFullStageCubePrefab = "Assets/Resources/" + _kPathCunnectCubePrefab + ".prefab";
+        private const string _kPathCunnectCubePrefab   = "Prefabs/InGame/ConnectCube";
+
+        private const string _kPathFullBlockCubePrefab = "Assets/Resources/" + _kPathBlockCubePrefab + ".prefab";
+        private const string _kPathBlockCubePrefab     = "Prefabs/InGame/BlockCube";
+
+        private const int _kKeyPutCube   = 0;
         private const int _kKeyStageCube = 1;
+        private const int _kKeyBlockCube = 2;
 
         public void Reset()
         {
             var linkCubeObj = GameObject.Find("Link_Cube");
             if (linkCubeObj != null)
             {
-                _linkCube = linkCubeObj.GetComponent<Transform>();
+                _linkStageCube = linkCubeObj.GetComponent<Transform>();
             }
         }
         private bool _isClear = false;
@@ -39,10 +45,12 @@ namespace Connect.InGame
         [SerializeField] private Cube[] _connectObj = default;
         [SerializeField] private IngameView _ingameView = default;
         public List<Cube> cubeList = default;
+        private List<Cube> _cubeAllList = default;
 
-        [SerializeField] private Transform _linkCube;
-        [SerializeField] private Transform _cacheCube;
-        [SerializeField] private int _stageNum;
+        [SerializeField] private Transform  _linkStageCube;
+        [SerializeField] private Transform  _linBlockCube;
+        [SerializeField] private Transform  _cacheCube;
+        [SerializeField] private int        _stageNum;
 
         Color red = new Color(1.0f, 0.3f, 0.3f, 0.3f);
         Color white = new Color(1.0f, 1.0f, 1.0f, 0.3f);
@@ -70,6 +78,8 @@ namespace Connect.InGame
 
             _connecRanget.enabled = false;
             _connecRanget.transform.localScale = new Vector3(_connecRanget.transform.localScale.x * _strandLength, _connecRanget.transform.localScale.y * _strandLength, 1f); ;
+
+            _cubeAllList = new List<Cube>();
 
             // ステージ生成.
             createStage(_stageNum);
@@ -120,7 +130,9 @@ namespace Connect.InGame
                 return;
             }
 
-            if (cubeList == null)
+            _cubeAllList.Clear();
+
+            if ( cubeList == null )
             {
                 cubeList = new List<Cube>();
             }
@@ -132,15 +144,33 @@ namespace Connect.InGame
                 if (cube == null)
                 {
                     var cubePrefab = ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab);
-                    var cubeObj = Instantiate(cubePrefab, dataPos, Quaternion.identity, _linkCube);
-                    cube = cubeObj.GetComponent<StageCube>();
+                    var cubeObj    = Instantiate(cubePrefab, dataPos, Quaternion.identity, _linkStageCube);
+                    cube           = cubeObj.GetComponent<StageCube>();
                 }
                 else
                 {
                     cube.transform.localPosition = dataPos;
-                    cube.transform.SetParent(_linkCube);
+                    cube.transform.SetParent(_linkStageCube);
                 }
+                _cubeAllList.Add(cube);
                 cubeList.Add(cube);
+            }
+
+            foreach (var dataPos in stageAsset.CubeBlockPosList)
+            {
+                var cube = getCacheCube<BlockCube>(_kKeyBlockCube);
+                if (cube == null)
+                {
+                    var cubePrefab = ResourceManager.Load<GameObject>(_kPathBlockCubePrefab);
+                    var cubeObj = Instantiate(cubePrefab, dataPos, Quaternion.identity, _linBlockCube);
+                    cube = cubeObj.GetComponent<BlockCube>();
+                }
+                else
+                {
+                    cube.transform.localPosition = dataPos;
+                    cube.transform.SetParent(_linBlockCube);
+                }
+                _cubeAllList.Add(cube);
             }
 
             _connectObj = cubeList.ToArray();
@@ -220,13 +250,13 @@ namespace Connect.InGame
                 PutCube cube = getCacheCube<PutCube>(_kKeyPutCube);
                 if (cube == null)
                 {
-                    var putObj = Instantiate(_putObj, offset, new Quaternion(), _linkCube);
-                    cube = putObj.GetComponent<PutCube>();
+                    var putObj = Instantiate(_putObj, offset, new Quaternion(), _linkStageCube);
+                    cube       = putObj.GetComponent<PutCube>();
                 }
                 else
                 {
                     cube.transform.localPosition = offset;
-                    cube.transform.SetParent(_linkCube);
+                    cube.transform.SetParent(_linkStageCube);
                 }
                 SetStrand(cube);
             }
@@ -299,6 +329,8 @@ namespace Connect.InGame
             }
 
             cubeList.Add(putCube);
+            _cubeAllList.Add(putCube);
+
             _cubeObj.Add(putCube.gameObject);
         }
 
@@ -339,7 +371,7 @@ namespace Connect.InGame
 
             _isClear = false;
 
-            cacheStarg();
+            cacheStage();
 
             _currentPutObj = 0;
             _connectObj = null;
@@ -349,9 +381,9 @@ namespace Connect.InGame
             _ingameView.SetStageName(UserData.Instance.clearStage + 1);
         }
 
-        private void cacheStarg()
+        private void cacheStage()
         {
-            foreach (var cube in cubeList)
+            foreach (var cube in _cubeAllList)
             {
                 int index;
                 // タッチで生成するオブジェクト.
@@ -359,6 +391,7 @@ namespace Connect.InGame
                 {
                     case PutCube putCube: index = _kKeyPutCube; break;
                     case StageCube StageCube: index = _kKeyStageCube; break;
+                    case BlockCube blockCube: index = _kKeyBlockCube; break;
                     default:
                         Debug.Log("未定義のCubeがあります");
                         continue;
@@ -407,15 +440,58 @@ namespace Connect.InGame
             var asset = StageDataSet.LoadForEditor(_stageNum);
             asset.Clear();
 
-            var cubeTransformArray = _linkCube.GetComponentInChildren<Transform>();
-            foreach (Transform cubeTransform in cubeTransformArray)
+            foreach (Transform cubeTransform in _linkStageCube)
             {
                 asset.Add(cubeTransform.localPosition);
+            }
+
+            foreach (Transform cubeTransform in _linBlockCube)
+            {
+                asset.AddBlock(cubeTransform.localPosition);
             }
 
             asset.SetDirtyForEditor();
             Debug.Log(asset.name + "の生成に成功");
 
+        }
+
+        void loadAsset()
+        {
+            var asset = StageDataSet.LoadForEditor(_stageNum);
+            if( asset == null )
+            {
+                Debug.LogError("アセットが読み込めません");
+                return;
+            }
+
+            foreach (var cubeTransform in asset.CubePosList)
+            {
+                var cubePrefab = AssetDatabase.LoadAssetAtPath(_kPathFullStageCubePrefab, typeof( GameObject )) as GameObject;
+                var cubeObj    = PrefabUtility.InstantiatePrefab(cubePrefab, _linkStageCube.transform) as GameObject;
+                cubeObj.transform.localPosition = cubeTransform;
+            }
+
+            foreach (var cubeTransform in asset.CubeBlockPosList)
+            {
+                var cubePrefab = AssetDatabase.LoadAssetAtPath(_kPathFullBlockCubePrefab, typeof(GameObject)) as GameObject;
+                var cubeObj    = PrefabUtility.InstantiatePrefab(cubePrefab, _linBlockCube.transform) as GameObject;
+                cubeObj.transform.localPosition = cubeTransform;
+            }
+        }
+
+        void deleteGameObject()
+        {
+            for (int ii = _linkStageCube.childCount - 1; 0 <= ii; ii--)
+            {
+                var obj = _linkStageCube.GetChild(ii);
+                DestroyImmediate(obj.gameObject);
+            }
+
+            for (int ii = _linBlockCube.childCount - 1; 0 <= ii; ii--)
+            {
+                var obj = _linBlockCube.GetChild(ii);
+                DestroyImmediate(obj.gameObject);
+            }
         }
 
         [CustomEditor(typeof(InGameManager))]
@@ -431,6 +507,19 @@ namespace Connect.InGame
                     {
                         var manager = target as InGameManager;
                         manager.saveAsset();
+                    }
+
+                    if (GUILayout.Button("Load", GUILayout.Width(100), GUILayout.Height(30)))
+                    {
+                        var manager = target as InGameManager;
+                        manager.deleteGameObject();
+                        manager.loadAsset();
+                    }
+
+                    if (GUILayout.Button("Destory", GUILayout.Width(100), GUILayout.Height(30)))
+                    {
+                        var manager = target as InGameManager;
+                        manager.deleteGameObject();
                     }
                 }
             }

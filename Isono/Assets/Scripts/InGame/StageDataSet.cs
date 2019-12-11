@@ -13,8 +13,10 @@ namespace Connect.InGame
         const string _kAssetResourcePathFormat = "ScriptableObject/InGame/Stage_{0:000}.asset";
 
         [SerializeField] List<Vector3> _cubePosList;
+        [SerializeField] List<Vector3> _cubeBlockPosList;
 
         public List<Vector3> CubePosList { get => _cubePosList; }
+        public List<Vector3> CubeBlockPosList { get => _cubeBlockPosList; }
 
         /// <summary>
         /// ロード.
@@ -78,6 +80,15 @@ namespace Connect.InGame
         public void Add(Vector3 pos)
         {
             _cubePosList.Add(pos);
+        }
+
+        /// <summary>
+        /// ギミック追加.
+        /// </summary>
+        /// <param name="pos"></param>
+        public void AddBlock(Vector3 pos)
+        {
+            _cubeBlockPosList.Add(pos);
         }
 
         /// <summary>
