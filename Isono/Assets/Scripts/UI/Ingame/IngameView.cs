@@ -20,6 +20,7 @@ namespace Connect.InGame.UI
         [SerializeField] private Button _skinBackButton = default;
         [SerializeField] private Button _unlockButton = default;
         [SerializeField] private SkinButton[] _skinButton = default;
+        public IObservable<Unit> OnClickUnlock => _unlockButton.OnClickAsObservable();
         private int selectSkin;
 
         [Header("Clear")]
@@ -37,7 +38,7 @@ namespace Connect.InGame.UI
             _backButton.OnClickAsObservable().Subscribe(_ => Debug.Log("やり直し")).AddTo(gameObject);
             _skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
             _skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);
-            _unlockButton.OnClickAsObservable().Subscribe(_ => AdvertiseManager.Instance.ShowMovieAds());
+            
             selectSkin = UserData.Instance.selectMaterial;
             for (int i = 0; i < _skinButton.Length; i++)
             {
@@ -64,6 +65,7 @@ namespace Connect.InGame.UI
         }
         public void SetStageName(int stageNum)
         {
+            Debug.Log(stageNum);
             _stageText.text = $"STAGE {stageNum}";
         }
         public void SetActiveClear(bool isActive)

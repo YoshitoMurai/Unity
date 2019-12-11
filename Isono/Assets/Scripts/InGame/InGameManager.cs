@@ -58,14 +58,23 @@ namespace Connect.InGame
 
         void Start()
         {
+            // Debug 毎回1ステージ目から
+            UserData.Instance.SetClearStage(0);
+
             skinManager = new SkinManager();
             skinManager.LoadSkinData();
 
-            _ingameView.InitView(1);
+            _ingameView.InitView(UserData.Instance.clearStage+1);
             _ingameView.OnClickClear
                 .ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => NextStage())
                 .AddTo(gameObject);
+
+            _ingameView.OnClickUnlock.Subscribe(_ =>
+            {
+                AdvertiseManager.Instance.ShowMovieAds();
+                _ingameView.SetUnsealedButton(skinManager.GetRandomSkinId());
+                });
             mainCamera = Camera.main;
 
             _connecRanget.enabled = false;
@@ -174,7 +183,7 @@ namespace Connect.InGame
 
             if (EventSystem.current.currentSelectedGameObject == null)
             {
-                _connecRanget.transform.position = pos;
+                _connecRanget.transform.position = Input.mousePosition;
                 _connecRanget.enabled = true;
             }
 
@@ -307,11 +316,11 @@ namespace Connect.InGame
                 switch (_cubeObj[i].tag)
                 {
                     case ObjectTagInfo.CONNECT_CUBE:
-                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 2];
+                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 0];
                         break;
 
                     case ObjectTagInfo.PUT_CUBE:
-                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 0];
+                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 2];
                         break;
 
                     default: Debug.Log("スキンがねぇな"); break;
@@ -331,6 +340,8 @@ namespace Connect.InGame
             _connectObj = null;
 
             createStage(++_stageNum);
+            UserData.Instance.SetClearStage(UserData.Instance.clearStage+1);
+            _ingameView.SetStageName(UserData.Instance.clearStage+1);
         }
 
         private void cacheStarg()
