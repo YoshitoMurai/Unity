@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 5702461915491659152}
   - component: {fileID: -974229344078296698}
   m_Layer: 0
-  m_Name: ConnectCube
-  m_TagString: ConnectObj
+  m_Name: StageCube
+  m_TagString: StageObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6ebcd22bc438ccc45a6418d12700b69a, type: 2}
+  - {fileID: 2100000, guid: 16d9125571fe43244825cd6e5860e03a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
