@@ -8,10 +8,21 @@ namespace Connect.InGame
         public Vector3 cubepos => new Vector3(transform.position.x, transform.position.y, transform.position.z);
         [SerializeField] public List<bool> connectFlag;
         [SerializeField] public List<Cube> connectObj = default;
+        [SerializeField] public Material cubeMaterial = default;
 
-        public void MaterialChange()
+
+        private void Start()
         {
+            cubeMaterial = this.GetComponent<Renderer>().material;
+        }
 
+        public void MaterialChange(Material material)
+        {
+            switch(gameObject.tag)
+            {
+                case ObjectTagInfo.STAGE_CUBE: cubeMaterial = material; break;
+                default: break;
+            }
         }
 
         public void SetStatus(Cube cube)
