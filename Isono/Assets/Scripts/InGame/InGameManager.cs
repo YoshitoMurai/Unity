@@ -59,18 +59,19 @@ namespace Connect.InGame
 
         void Start()
         {
+            // Debug 毎回1ステージ目から
+            UserData.Instance.SetClearStage(0);
+
             skinManager = new SkinManager();
             skinManager.LoadSkinData();
 
-            _ingameView.InitView(1);
-            _ingameView.OnClickClear
-                .ThrottleFirst(TimeSpan.FromSeconds(1))
-                .Subscribe(_ => NextStage())
-                .AddTo(gameObject);
-            mainCamera = Camera.main;
+            _ingameView.InitView(UserData.Instance.clearStage + 1);
+            SetButtonEvent();
 
             _connecRanget.enabled = false;
             _connecRanget.transform.localScale = new Vector3(_connecRanget.transform.localScale.x * _strandLength, _connecRanget.transform.localScale.y * _strandLength, 1f); ;
+
+            mainCamera = Camera.main;
 
             // ステージ生成.
             createStage(_stageNum);
@@ -96,7 +97,21 @@ namespace Connect.InGame
                     SkinChange(index);
                 }).AddTo(gameObject);
         }
+        private void SetButtonEvent()
+        {
 
+            _ingameView.OnClickClear
+                .ThrottleFirst(TimeSpan.FromSeconds(1))
+                .Subscribe(_ => NextStage())
+                .AddTo(gameObject);
+
+            _ingameView.OnClickUnlock.Subscribe(_ =>
+            {
+                //AdvertiseManager.Instance.ShowMovieAds();
+                _ingameView.SetUnsealedButton(skinManager.GetRandomSkinId());
+            });
+            _ingameView.OnClickBack.Subscribe(_ => Debug.Log("やりなおし"));
+        }
         private void createStage(int stageNum)
         {
             var stageAsset = StageDataSet.Load(stageNum);
@@ -290,19 +305,16 @@ namespace Connect.InGame
             UserData.Instance.SetMaterial(index);
             _ingameView.SetSelectButton(index);
 
-            var connectSkinName = String.Format(_kSkin, index, 0);
-            var putSkinName     = String.Format(_kSkin, index, 2);
-
             for (int i = 0; i < _cubeObj.Count; i++)
             {
                 switch (_cubeObj[i].tag)
                 {
                     case ObjectTagInfo.STAGE_CUBE:
-                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 2];
+                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[0,index];
                         break;
 
                     case ObjectTagInfo.PUT_CUBE:
-                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 0];
+                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[2,index];
                         break;
 
                     default: Debug.Log("スキンがねぇな"); break;
