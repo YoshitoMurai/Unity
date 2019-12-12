@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 16d9125571fe43244825cd6e5860e03a, type: 2}
+  - {fileID: 2100000, guid: 6a4a63fc05d093f469b1519f22d903a9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,6 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectFlag: 
   connectObj: []
+  cubeMaterial: {fileID: 0}
 --- !u!114 &-974229344078296698
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -37,7 +37,9 @@ namespace Connect.InGame
                 _linkStageCube = linkCubeObj.GetComponent<Transform>();
             }
         }
+
         private bool _isClear = false;
+        public void isClearChange(bool flag) { _isClear = flag; }
 
         [SerializeField] private GameObject _putObj = default;
         [SerializeField] private int _rimitObj = 3;
@@ -297,6 +299,9 @@ namespace Connect.InGame
                         cubeList[i].connectFlag[j] = putCube.connectFlag[j];
                     }
                 }
+                // ここでマテリアル変えて
+                //cubeList[i].MaterialChange();
+
                 if (putCube.connectFlag[i] && i < _stageObj.Length)
                 {
                     connectCount++;

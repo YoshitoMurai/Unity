@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1125,8 +1125,9 @@ MonoBehaviour:
   _putObj: {fileID: 3348134785906540799, guid: cdcd1cf0c125d404c899195607b10d6a, type: 3}
   _rimitObj: 117
   _strandLength: 2
-  _connectObj: []
+  _stageObj: []
   _ingameView: {fileID: 1398381942}
+  connectCount: 0
   cubeList: []
   _linkStageCube: {fileID: 302790219}
   _linBlockCube: {fileID: 743808811}
@@ -3968,6 +3969,7 @@ MonoBehaviour:
   - {fileID: 489603875}
   _clearbg: {fileID: 1171899183}
   _graphicRaycaster: {fileID: 0}
+  ingamemanager: {fileID: 449906568}
 --- !u!1 &1463103713
 GameObject:
   m_ObjectHideFlags: 0

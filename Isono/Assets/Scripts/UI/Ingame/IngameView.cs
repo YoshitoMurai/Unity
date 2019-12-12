@@ -5,6 +5,7 @@ using System;
 using TMPro;
 using Connect;
 using Connect.Common;
+using Connect.InGame;
 
 namespace Connect.InGame.UI
 {
@@ -32,13 +33,18 @@ namespace Connect.InGame.UI
 
         [SerializeField] private GraphicRaycaster _graphicRaycaster = default;
 
+        public InGameManager ingamemanager;
+
         // Start is called before the first frame update
         public void InitView(int stageNum)
         {
             _titleBackButton.OnClickAsObservable().Subscribe(_ => GameSceneManager.Instance.LoadScene(kSceneType.Title)).AddTo(gameObject);
-            _skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
-            _skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);
+            //_skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
+            //_skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);
             
+            _skinChangeButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(true)).AddTo(gameObject);
+            _skinBackButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(false)).AddTo(gameObject);
+
             selectSkin = UserData.Instance.selectMaterial;
             for (int i = 0; i < _skinButton.Length; i++)
             {
@@ -90,6 +96,12 @@ namespace Connect.InGame.UI
         public void SetUnsealedButton(int index)
         {
             _skinButton[index].SetUnsealed();
+        }
+
+        private void SkinChangeUI(bool flag)
+        {
+            _skinChangeDialog.SetActive(flag);
+            ingamemanager.isClearChange(flag);
         }
     }
 }
