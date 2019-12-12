@@ -44,7 +44,7 @@ namespace Connect.InGame
                 //Rayが当たったオブジェクト判定
                 switch (hit.collider.tag)
                 {
-                    case ObjectTagInfo.STAGE_CUBE:
+                    case ObjectTagInfo.CONNECT_CUBE:
                     case ObjectTagInfo.PUT_CUBE:
                         for (int i = 0; i < connectObj.Count; i++)
                         {

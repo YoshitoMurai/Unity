@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - ConnectObj
   - PutObj
   - BlockObj
-  - StageObj
   layers:
   - Default
   - TransparentFX

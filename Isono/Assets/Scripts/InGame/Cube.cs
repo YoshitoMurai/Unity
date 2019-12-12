@@ -9,15 +9,10 @@ namespace Connect.InGame
         [SerializeField] public List<bool> connectFlag;
         [SerializeField] public List<Cube> connectObj = default;
 
-        public void MaterialChange()
+        public void SetConnect(Cube connect)
         {
-
-        }
-
-        public void SetStatus(Cube cube, bool flag)
-        {
-            connectObj.Add(cube);
-            connectFlag.Add(flag);
+            connectObj.Add(connect);
+            connectFlag.Add(false);
         }
 
         public void Clear()
