@@ -20,7 +20,7 @@ namespace Connect.InGame
         private const string _kSkin = "Materials/Skin/Skin{0}/M_Skin{0}_{1}";
 
         private const string _kPathFullStageCubePrefab = "Assets/Resources/" + _kPathCunnectCubePrefab + ".prefab";
-        private const string _kPathCunnectCubePrefab   = "Prefabs/InGame/ConnectCube";
+        private const string _kPathCunnectCubePrefab   = "Prefabs/InGame/StageCube";
 
         private const string _kPathFullBlockCubePrefab = "Assets/Resources/" + _kPathBlockCubePrefab + ".prefab";
         private const string _kPathBlockCubePrefab     = "Prefabs/InGame/BlockCube";
@@ -42,8 +42,9 @@ namespace Connect.InGame
         [SerializeField] private GameObject _putObj = default;
         [SerializeField] private int _rimitObj = 3;
         [SerializeField] private int _strandLength = 2;
-        [SerializeField] private Cube[] _connectObj = default;
+        [SerializeField] private Cube[] _stageObj = default;
         [SerializeField] private IngameView _ingameView = default;
+        [SerializeField] public int connectCount = 0;
         public List<Cube> cubeList = default;
         private List<Cube> _cubeAllList = default;
 
@@ -173,7 +174,7 @@ namespace Connect.InGame
                 _cubeAllList.Add(cube);
             }
 
-            _connectObj = cubeList.ToArray();
+            _stageObj = cubeList.ToArray();
             cubeList.Clear();
             _cubeObj.Clear();
             _cubeObj.Add(_putObj.gameObject);
@@ -187,13 +188,13 @@ namespace Connect.InGame
                 }
             }
 
-            foreach (var item in _connectObj)
+            foreach (var item in _stageObj)
             {
                 cubeList.Add(item);
                 _cubeObj.Add(item.gameObject);
-                for (int i = 0; i < _connectObj.Length; i++)
+                for (int i = 0; i < _stageObj.Length; i++)
                 {
-                    _connectObj[i].SetConnect(item);
+                    _stageObj[i].SetStatus(item);
                 }
             }
         }
@@ -264,80 +265,59 @@ namespace Connect.InGame
 
         private void SetStrand(PutCube putCube)
         {
-            foreach (var item in _connectObj)
+            cubeList.Add(putCube);
+            _cubeObj.Add(putCube.gameObject);
+            _cubeAllList.Add(putCube);
+
+            // PutCubeに各ブロック判定を追加
+            foreach (var item in cubeList)
             {
-                putCube.SetConnect(item);
+                putCube.SetStatus(item);
             }
 
-            putCube.InitLineRenderer(_connectObj.Length);
+            putCube.InitLineRenderer(_stageObj.Length);
 
-            foreach (var putcubelist in cubeList)
+            for (int i = 0; i < cubeList.Count - 1; i++)
             {
-                if (Vector2.Distance(putCube.cubepos, putcubelist.cubepos) < _strandLength)
+                // 生成したPutCubeの判定を追加
+                cubeList[i].SetStatus(putCube);
+                if (Vector2.Distance(putCube.cubepos, cubeList[i].cubepos) < _strandLength)
                 {
-                    putCube.AddLineRendererObj(putcubelist.cubepos);
+                    putCube.AddLineRendererObj(cubeList[i].cubepos);
                 }
             }
 
-            List<int> connectCheck = new List<int>();
-            for (int k = 0; k < putCube.connectFlag.Count; k++)
+            // 生成されているボックスの判定を更新
+            for (int i = 0; i < cubeList.Count; i++)
             {
-                var putFlag = putCube.connectFlag[k];
-                if (putFlag)
+                for (int j = 0; j < putCube.connectFlag.Count; j++)
                 {
-                    connectCheck.Add(k);
-                }
-            }
-
-            // つながっているオブジェクト判定を更新
-            if (connectCheck.Count != _connectObj.Length)
-            {
-                for (int i = 0; i < cubeList.Count; i++)
-                {
-                    var cubelist = cubeList[i];
-
-                    for (int j = 0; j < connectCheck.Count; j++)
+                    if (putCube.connectFlag[i])
                     {
-                        var check = connectCheck[j];
-                        switch (cubelist.gameObject.tag)
-                        {
-                            case ObjectTagInfo.CONNECT_CUBE:
-                                if (putCube.connectFlag[i])
-                                {
-                                    cubelist.connectFlag[check] = putCube.connectFlag[check];
-                                }
-                                break;
-                            case ObjectTagInfo.PUT_CUBE:
-                                // どちらかがtrueだった場合に判定を更新する
-                                if (cubelist.connectFlag[check] && putCube.connectFlag[check])
-                                {
-                                    foreach (var update in connectCheck)
-                                    {
-                                        cubelist.connectFlag[update] = putCube.connectFlag[update];
-                                    }
-                                    j++;
-                                }
-                                break;
-                            default: break;
-                        }
+                        cubeList[i].connectFlag[j] = putCube.connectFlag[j];
                     }
                 }
+                if (putCube.connectFlag[i] && i < _stageObj.Length)
+                {
+                    connectCount++;
+                }
             }
-            else
+
+            if (_stageObj.Length <= connectCount)
             {
                 GameClear();
             }
-
-            cubeList.Add(putCube);
-            _cubeAllList.Add(putCube);
-
-            _cubeObj.Add(putCube.gameObject);
+            else
+            {
+                connectCount = 0;
+            }
         }
 
         void GameClear()
         {
             _isClear = true;
             _ingameView.SetActiveClear(true);
+            connectCount = 0;
         }
 
         private void SkinChange(int index)
@@ -352,7 +332,7 @@ namespace Connect.InGame
             {
                 switch (_cubeObj[i].tag)
                 {
-                    case ObjectTagInfo.CONNECT_CUBE:
+                    case ObjectTagInfo.STAGE_CUBE:
                         _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 0];
                         break;
 
@@ -374,7 +354,7 @@ namespace Connect.InGame
             cacheStage();
 
             _currentPutObj = 0;
-            _connectObj = null;
+            _stageObj = null;
 
             createStage(++_stageNum);
             UserData.Instance.SetClearStage(UserData.Instance.clearStage + 1);

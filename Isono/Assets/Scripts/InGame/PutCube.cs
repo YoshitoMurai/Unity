@@ -23,7 +23,6 @@ namespace Connect.InGame
         {
             lineRenderer.startWidth = 0.1f;
             lineRenderer.endWidth = 0.1f;
-            //lineRenderer.SetWidth(0.05f, 0.05f);
             lineRenderer.SetPosition(0, cubepos);
         }
 
@@ -44,9 +43,9 @@ namespace Connect.InGame
                 //Rayが当たったオブジェクト判定
                 switch (hit.collider.tag)
                 {
-                    case ObjectTagInfo.CONNECT_CUBE:
+                    case ObjectTagInfo.STAGE_CUBE:
                     case ObjectTagInfo.PUT_CUBE:
-                        for (int i = 0; i < connectObj.Count; i++)
+                        for (int i = 0; i < connectObj.Count - 1; i++)
                         {
                             if (connectObj[i].transform.position == putcubpos || 
                                 hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
