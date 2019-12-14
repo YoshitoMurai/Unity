@@ -19,12 +19,44 @@ namespace Connect.InGame
             lineRenderer.SetPosition(0, Vector3.zero);
         }
 
-        public void InitLineRenderer(int connectnumber)
+        public void InitLineRenderer()
         {
             lineRenderer.startWidth = 0.1f;
             lineRenderer.endWidth = 0.1f;
             lineRenderer.SetPosition(0, cubepos);
         }
+
+        public void ProvisionalCubeObj(Vector3 mousepos, Vector3 cubepos)
+        {
+            transform.position = mousepos;
+
+            // Rayの作成
+            Ray ray = new Ray(mousepos, cubepos);
+
+            //Rayの当たり判定
+            RaycastHit hit;
+
+            // Rayの可視化
+            //Debug.DrawLine(mousepos, cubepos, Color.red, 3f);
+
+            // Rayの衝突判定
+            if (Physics.Linecast(mousepos, cubepos, out hit))
+            {
+                //Rayが当たったオブジェクト判定
+                switch (hit.collider.tag)
+                {
+                    case ObjectTagInfo.STAGE_CUBE:
+                    case ObjectTagInfo.PUT_CUBE:
+                        lineRenderer.SetPosition(0, mousepos);
+                        lineRenderer.SetPosition(1, cubepos);
+                        break;
+
+                    case ObjectTagInfo.BLOCK_CUBE: break;
+                    default: break;
+                }
+            }
+        }
+
 
         public void AddLineRendererObj(Vector3 putcubpos)
         {

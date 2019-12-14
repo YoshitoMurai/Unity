@@ -6,9 +6,9 @@ namespace Connect.InGame
     public class Cube : MonoBehaviour
     {
         public Vector3 cubepos => new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        [SerializeField] public List<bool> connectFlag;
-        [SerializeField] public List<Cube> connectObj = default;
-        [SerializeField] public Material cubeMaterial = default;
+        public List<bool> connectFlag;
+        public List<Cube> connectObj = default;
+        public Material cubeMaterial = default;
 
 
         private void Start()
