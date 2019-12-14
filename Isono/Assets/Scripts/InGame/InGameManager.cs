@@ -58,6 +58,7 @@ namespace Connect.InGame
         Color red = new Color(1.0f, 0.3f, 0.3f, 0.3f);
         Color white = new Color(1.0f, 1.0f, 1.0f, 0.3f);
         public Image _connecRanget = default;
+        public ProvisionalCube provisionalCube;
 
         [SerializeField] private List<GameObject> _cubeObj = default;
 
@@ -81,6 +82,7 @@ namespace Connect.InGame
 
             _connecRanget.enabled = false;
             _connecRanget.transform.localScale = new Vector3(_connecRanget.transform.localScale.x * _strandLength, _connecRanget.transform.localScale.y * _strandLength, 1f); ;
+            provisionalCube.gameObject.SetActive(false);
 
             _cubeAllList = new List<Cube>();
 
@@ -198,6 +200,7 @@ namespace Connect.InGame
                 {
                     _stageObj[i].SetStatus(item);
                 }
+                provisionalCube.SetLineRendererCount(item);
             }
         }
 
@@ -219,10 +222,14 @@ namespace Connect.InGame
             RaycastHit hit = new RaycastHit();
             var pos = mainCamera.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward);
 
+
             if (EventSystem.current.currentSelectedGameObject == null)
             {
-                _connecRanget.transform.position = Input.mousePosition;
-                _connecRanget.enabled = true;
+                //_connecRanget.transform.position = Input.mousePosition;
+                //_connecRanget.enabled = true;
+                pos = new Vector3(pos.x, pos.y, 0f);
+                provisionalCube.gameObject.SetActive(true);
+                provisionalCube.AddLineRenderer(pos, _strandLength);
             }
 
             // オブジェクトが生成できる場合とできないでUIの色を変える
@@ -241,7 +248,8 @@ namespace Connect.InGame
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
 
-            _connecRanget.enabled = false;
+            //_connecRanget.enabled = false;
+            provisionalCube.gameObject.SetActive(false);
 
             // オブジェクトがあった場合は、生成させない
             if (!Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit) && _currentPutObj < _rimitObj)
@@ -270,6 +278,7 @@ namespace Connect.InGame
             cubeList.Add(putCube);
             _cubeObj.Add(putCube.gameObject);
             _cubeAllList.Add(putCube);
+            provisionalCube.SetLineRendererCount(putCube);
 
             // PutCubeに各ブロック判定を追加
             foreach (var item in cubeList)
@@ -277,7 +286,7 @@ namespace Connect.InGame
                 putCube.SetStatus(item);
             }
 
-            putCube.InitLineRenderer(_stageObj.Length);
+            putCube.InitLineRenderer();
 
             for (int i = 0; i < cubeList.Count - 1; i++)
             {
@@ -400,6 +409,9 @@ namespace Connect.InGame
                     lineCube.InitLineReset();
                 }
             }
+            provisionalCube.InitLineReset();
+            provisionalCube.Clear();
+
         }
 
         private T getCacheCube<T>(int key) where T : Cube
