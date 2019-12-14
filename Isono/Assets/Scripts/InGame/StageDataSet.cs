@@ -13,7 +13,7 @@ namespace Connect.InGame
         const string _kAssetResourcePathFormat = "ScriptableObject/InGame/Stage_{0:000}.asset";
 
         [SerializeField] List<Vector3> _cubePosList;
-        [SerializeField] List<Vector3> _cubeBlockPosList;
+        [SerializeField] List<Vector3> _cubeBlockPosList = default;
 
         public List<Vector3> CubePosList { get => _cubePosList; }
         public List<Vector3> CubeBlockPosList { get => _cubeBlockPosList; }

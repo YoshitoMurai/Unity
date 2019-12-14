@@ -45,7 +45,7 @@ namespace Connect.InGame.UI
             _skinChangeButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(true)).AddTo(gameObject);
             _skinBackButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(false)).AddTo(gameObject);
 
-            selectSkin = UserData.Instance.selectMaterial;
+            selectSkin = UserData.Instance.selectSkin;
             for (int i = 0; i < _skinButton.Length; i++)
             {
                 _skinButton[i].Initialize(i,UserData.Instance.isUnsealedSkin[i], selectSkin == i);

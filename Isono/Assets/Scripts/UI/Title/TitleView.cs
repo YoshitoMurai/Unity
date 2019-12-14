@@ -41,7 +41,7 @@ namespace Connect.Title
 				);
 
             _settingDialog.OnClickAsObservable().Subscribe(_=> SetActiveSettingDialog(false)).AddTo(gameObject);
-
+            _noAdsButton.OnClickAsObservable().Subscribe(_ => Debug.Log("NoAds")).AddTo(gameObject);
             SetSettingDialog(userData);
 
 			

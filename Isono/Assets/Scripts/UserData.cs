@@ -9,7 +9,7 @@ namespace Connect.Common
         public int clearStage { get; private set; }
         public bool onSound { get; private set; }
         public bool onVibration { get; private set; }
-        public int selectMaterial { get; private set; }
+        public int selectSkin { get; private set; }
         private int skinData;
         public bool[] isUnsealedSkin { get; private set; }
         #region Singleton
@@ -45,10 +45,10 @@ namespace Connect.Common
             onSound = (settingFlag & 0001) != 0;
             onVibration = (settingFlag & 0010) != 0;
 
-            selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
-            if(selectMaterial==0) selectMaterial = 1;
+            selectSkin = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
+            selectSkin = 0;
             skinData = PlayerPrefs.GetInt(CommonInfo.UNSEALED_SKIN);
-            if (skinData == 0) skinData = 1;
+            skinData = 1;
             isUnsealedSkin = new bool[CommonInfo.SKIN_NUM];
             for (int i = 0; i < CommonInfo.SKIN_NUM; i++)
             {
@@ -79,9 +79,9 @@ namespace Connect.Common
             clearStage = num;
             Save();
         }
-        public void SetMaterial(int num)
+        public void SetSkin(int num)
         {
-            selectMaterial = num;
+            selectSkin = num;
             PlayerPrefs.SetInt(CommonInfo.SELECT_SKIN, num);
             Save();
         }

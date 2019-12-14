@@ -50,9 +50,9 @@ namespace Connect.InGame
         public List<Cube> cubeList = default;
         private List<Cube> _cubeAllList = default;
 
-        [SerializeField] private Transform  _linkStageCube;
-        [SerializeField] private Transform  _linBlockCube;
-        [SerializeField] private Transform  _cacheCube;
+        [SerializeField] private Transform  _linkStageCube = default;
+        [SerializeField] private Transform  _linBlockCube = default;
+        [SerializeField] private Transform  _cacheCube = default;
         [SerializeField] private int        _stageNum;
 
         Color red = new Color(1.0f, 0.3f, 0.3f, 0.3f);
@@ -99,15 +99,15 @@ namespace Connect.InGame
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
 
-            SkinChange(UserData.Instance.selectMaterial);
+            SetSkin(UserData.Instance.selectSkin);
 
             // スキン変更
             _ingameView.OnClickSkin
                 .ThrottleFirst(TimeSpan.FromMilliseconds(500))
                 .Subscribe(index =>
                 {
-                    UserData.Instance.SetMaterial(index);
-                    SkinChange(index);
+                    UserData.Instance.SetSkin(index);
+                    SetSkin(index, false);
                 }).AddTo(gameObject);
         }
         private void SetButtonEvent()
@@ -158,6 +158,9 @@ namespace Connect.InGame
                     cube.transform.SetParent(_linkStageCube);
                 }
                 _cubeAllList.Add(cube);
+                cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
+                cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
+                cube.SetRotate(false);
                 cubeList.Add(cube);
             }
 
@@ -175,6 +178,8 @@ namespace Connect.InGame
                     cube.transform.localPosition = dataPos;
                     cube.transform.SetParent(_linBlockCube);
                 }
+                cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
+                cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block));
                 _cubeAllList.Add(cube);
             }
 
@@ -269,6 +274,8 @@ namespace Connect.InGame
                     cube.transform.localPosition = offset;
                     cube.transform.SetParent(_linkStageCube);
                 }
+                cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
+                cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
                 SetStrand(cube);
             }
         }
@@ -301,11 +308,12 @@ namespace Connect.InGame
             // 生成されているボックスの判定を更新
             for (int i = 0; i < cubeList.Count; i++)
             {
+                var cube = cubeList[i];
                 for (int j = 0; j < putCube.connectFlag.Count; j++)
                 {
                     if (putCube.connectFlag[i])
                     {
-                        cubeList[i].connectFlag[j] = putCube.connectFlag[j];
+                        cube.connectFlag[j] = putCube.connectFlag[j];
                     }
                 }
                 // ここでマテリアル変えて
@@ -313,6 +321,8 @@ namespace Connect.InGame
 
                 if (putCube.connectFlag[i] && i < _stageObj.Length)
                 {
+                    cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
+                    cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
                     connectCount++;
                 }
             }
@@ -334,29 +344,33 @@ namespace Connect.InGame
             connectCount = 0;
         }
 
-        private void SkinChange(int index)
+        private void SetSkin(int index) { SetSkin(index, true); }
+        private void SetSkin(int index, bool resetColor)
         {
-            UserData.Instance.SetMaterial(index);
+            UserData.Instance.SetSkin(index);
             _ingameView.SetSelectButton(index);
 
-            var connectSkinName = String.Format(_kSkin, index, 0);
-            var putSkinName = String.Format(_kSkin, index, 2);
-
-            for (int i = 0; i < _cubeObj.Count; i++)
+            for (int i = 0; i < _cubeAllList.Count; i++)
             {
-                switch (_cubeObj[i].tag)
+                var cube = _cubeAllList[i].GetComponent<Cube>();
+                cube.SetSkin(skinManager.skins[index]);
+                switch (_cubeAllList[i].tag)
                 {
                     case ObjectTagInfo.STAGE_CUBE:
-                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 0];
+                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
                         break;
 
                     case ObjectTagInfo.PUT_CUBE:
-                        _cubeObj[i].GetComponent<Renderer>().material = skinManager.skins[index, 2];
+                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
                         break;
-
+                    case ObjectTagInfo.BLOCK_CUBE:
+                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block));
+                        break;
                     default: Debug.Log("スキンがねぇな"); break;
                 }
             }
+            provisionalCube.SetSkin(skinManager.skins[index]);
+            provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
         }
 
         private void NextStage()

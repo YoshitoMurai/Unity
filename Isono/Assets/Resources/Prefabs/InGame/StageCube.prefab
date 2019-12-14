@@ -109,6 +109,7 @@ MonoBehaviour:
   connectFlag: 
   connectObj: []
   cubeMaterial: {fileID: 0}
+  rotate: {fileID: -974229344078296698}
 --- !u!114 &-974229344078296698
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,20 +9,28 @@ namespace Connect.InGame
         public List<bool> connectFlag;
         public List<Cube> connectObj = default;
         public Material cubeMaterial = default;
+        [SerializeField] private Rotate rotate = default;
+        private Material mat;
+        bool init = false;
 
-
-        private void Start()
+        public void InitMaterial(Shader shader)
         {
-            cubeMaterial = this.GetComponent<Renderer>().material;
+            mat = GetComponent<Renderer>().material = new Material(shader);
+            init = true;
         }
-
-        public void MaterialChange(Material material)
+        public void SetSkin(Shader shader)
         {
-            switch(gameObject.tag)
-            {
-                case ObjectTagInfo.STAGE_CUBE: cubeMaterial = material; break;
-                default: break;
-            }
+            if (!init) InitMaterial(shader);
+            mat.shader = shader;
+        }
+        public void SetColor(Color color)
+        {
+            mat.SetColor("_Color", color);
+        }
+        public void SetRotate(bool isRotate)
+        {
+            if (rotate != null) rotate.isRotate = isRotate;
+            if (!isRotate) transform.rotation = Quaternion.identity;
         }
 
         public void SetStatus(Cube cube)
@@ -43,6 +51,10 @@ namespace Connect.InGame
         {
             connectObj.Clear();
             connectFlag.Clear();
+        }
+        public void OnDestroy()
+        {
+            Destroy(mat);
         }
     }
 }
