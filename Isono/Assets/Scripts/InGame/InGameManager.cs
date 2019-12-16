@@ -252,6 +252,7 @@ namespace Connect.InGame
                 }
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
                 cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
+                cube.transform.rotation = Quaternion.identity;
                 SetStrand(cube);
             }
         }
@@ -298,6 +299,7 @@ namespace Connect.InGame
                 {
                     cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
                     cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
+                    cube.SetRotate(true);
                     connectCount++;
                 }
             }
