@@ -69,6 +69,10 @@ namespace Connect.InGame
             skinManager = new SkinManager();
             skinManager.LoadSkinData();
             _ingameView.InitView(UserData.Instance.nextStage);
+            _ingameView.OnClickBack.Subscribe(_ =>
+            {
+                RetryStage();
+            });
             SetButtonEvent();
 
             mainCamera = Camera.main;
@@ -363,6 +367,21 @@ namespace Connect.InGame
 
             UserData.Instance.SetClearStage(UserData.Instance.nextStage);
             _ingameView.SetStageName(UserData.Instance.nextStage);
+
+            createStage(UserData.Instance.nextStage);
+        }
+
+        private void RetryStage()
+        {
+            if(_isClear)
+            {
+                return;
+            }
+
+            cacheStage();
+
+            _currentPutObj = 0;
+            _stageObj = null;
 
             createStage(UserData.Instance.nextStage);
         }
