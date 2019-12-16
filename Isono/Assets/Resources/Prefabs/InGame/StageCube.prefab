@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5702461915491659155}
   - component: {fileID: 5702461915491659152}
   - component: {fileID: -974229344078296698}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: StageCube
   m_TagString: StageObj
   m_Icon: {fileID: 0}
@@ -110,6 +110,7 @@ MonoBehaviour:
   connectObj: []
   cubeMaterial: {fileID: 0}
   rotate: {fileID: -974229344078296698}
+  aaa: []
 --- !u!114 &-974229344078296698
 MonoBehaviour:
   m_ObjectHideFlags: 0

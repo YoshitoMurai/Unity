@@ -111,6 +111,7 @@ MonoBehaviour:
   connectObj: []
   cubeMaterial: {fileID: 0}
   rotate: {fileID: -1300965900333040937}
+  aaa: []
   lineRenderer: {fileID: 8804931860450670966}
 --- !u!120 &8804931860450670966
 LineRenderer:

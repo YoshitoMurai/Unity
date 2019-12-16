@@ -13,6 +13,11 @@ namespace Connect.InGame
         private Material mat;
         bool init = false;
 
+        public void ChangeLayer(int layer)
+        {
+            gameObject.layer = layer;
+        }
+
         public void InitMaterial(Shader shader)
         {
             mat = GetComponent<Renderer>().material = new Material(shader);
@@ -51,7 +56,15 @@ namespace Connect.InGame
         {
             connectObj.Clear();
             connectFlag.Clear();
+            switch (gameObject.tag)
+            {
+                case ObjectTagInfo.STAGE_CUBE: break;
+                case ObjectTagInfo.PUT_CUBE  : ChangeLayer(0); break;
+                case ObjectTagInfo.BLOCK_CUBE: break;
+                default: break;
+            }
         }
+
         public void OnDestroy()
         {
             Destroy(mat);

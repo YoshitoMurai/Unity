@@ -17,8 +17,6 @@ namespace Connect.InGame
 {
     public class InGameManager : MonoBehaviour
     {
-        private const string _kSkin = "Materials/Skin/Skin{0}/M_Skin{0}_{1}";
-
         private const string _kPathFullStageCubePrefab = "Assets/Resources/" + _kPathCunnectCubePrefab + ".prefab";
         private const string _kPathCunnectCubePrefab   = "Prefabs/InGame/StageCube";
 
@@ -55,12 +53,7 @@ namespace Connect.InGame
         [SerializeField] private Transform  _cacheCube = default;
         [SerializeField] private int        _stageNum;
 
-        Color red = new Color(1.0f, 0.3f, 0.3f, 0.3f);
-        Color white = new Color(1.0f, 1.0f, 1.0f, 0.3f);
-        public Image _connecRanget = default;
         public ProvisionalCube provisionalCube;
-
-        [SerializeField] private List<GameObject> _cubeObj = default;
 
         private Camera mainCamera;
         private int _currentPutObj = 0;
@@ -80,8 +73,6 @@ namespace Connect.InGame
 
             mainCamera = Camera.main;
 
-            _connecRanget.enabled = false;
-            _connecRanget.transform.localScale = new Vector3(_connecRanget.transform.localScale.x * _strandLength, _connecRanget.transform.localScale.y * _strandLength, 1f); ;
             provisionalCube.gameObject.SetActive(false);
 
             _cubeAllList = new List<Cube>();
@@ -185,22 +176,10 @@ namespace Connect.InGame
 
             _stageObj = cubeList.ToArray();
             cubeList.Clear();
-            _cubeObj.Clear();
-            _cubeObj.Add(_putObj.gameObject);
-            _cubeObj.Add(ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab));
-
-            foreach (Transform child in _cacheCube)
-            {
-                if (child.tag != ObjectTagInfo.TAG_DEFAULT)
-                {
-                    _cubeObj.Add(child.gameObject);
-                }
-            }
 
             foreach (var item in _stageObj)
             {
                 cubeList.Add(item);
-                _cubeObj.Add(item.gameObject);
                 for (int i = 0; i < _stageObj.Length; i++)
                 {
                     _stageObj[i].SetStatus(item);
@@ -230,8 +209,6 @@ namespace Connect.InGame
 
             if (EventSystem.current.currentSelectedGameObject == null)
             {
-                //_connecRanget.transform.position = Input.mousePosition;
-                //_connecRanget.enabled = true;
                 pos = new Vector3(pos.x, pos.y, 0f);
                 provisionalCube.gameObject.SetActive(true);
                 provisionalCube.AddLineRenderer(pos, _strandLength);
@@ -240,11 +217,11 @@ namespace Connect.InGame
             // オブジェクトが生成できる場合とできないでUIの色を変える
             if (Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit))
             {
-                _connecRanget.color = red;
+
             }
             else
             {
-                _connecRanget.color = white;
+
             }
         }
 
@@ -253,7 +230,6 @@ namespace Connect.InGame
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
 
-            //_connecRanget.enabled = false;
             provisionalCube.gameObject.SetActive(false);
 
             // オブジェクトがあった場合は、生成させない
@@ -283,7 +259,6 @@ namespace Connect.InGame
         private void SetStrand(PutCube putCube)
         {
             cubeList.Add(putCube);
-            _cubeObj.Add(putCube.gameObject);
             _cubeAllList.Add(putCube);
             provisionalCube.SetLineRendererCount(putCube);
 
@@ -305,6 +280,8 @@ namespace Connect.InGame
                 }
             }
 
+            putCube.ChangeLayer(9);
+
             // 生成されているボックスの判定を更新
             for (int i = 0; i < cubeList.Count; i++)
             {
@@ -316,8 +293,6 @@ namespace Connect.InGame
                         cube.connectFlag[j] = putCube.connectFlag[j];
                     }
                 }
-                // ここでマテリアル変えて
-                //cubeList[i].MaterialChange();
 
                 if (putCube.connectFlag[i] && i < _stageObj.Length)
                 {
