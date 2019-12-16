@@ -7,6 +7,7 @@ namespace Connect.Common
     public class UserData : MonoBehaviour
     {
         public int clearStage { get; private set; }
+        public int nextStage => clearStage + 1;
         public bool onSound { get; private set; }
         public bool onVibration { get; private set; }
         public int selectSkin { get; private set; }

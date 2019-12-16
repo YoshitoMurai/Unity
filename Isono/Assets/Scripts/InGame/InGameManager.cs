@@ -68,7 +68,11 @@ namespace Connect.InGame
 
             skinManager = new SkinManager();
             skinManager.LoadSkinData();
-            _ingameView.InitView(UserData.Instance.clearStage + 1);
+            _ingameView.InitView(UserData.Instance.nextStage);
+            _ingameView.OnClickBack.Subscribe(_ =>
+            {
+                RetryStage();
+            });
             SetButtonEvent();
 
             mainCamera = Camera.main;
@@ -78,7 +82,7 @@ namespace Connect.InGame
             _cubeAllList = new List<Cube>();
 
             // ステージ生成.
-            createStage(_stageNum);
+            createStage(UserData.Instance.nextStage);
 
             this.UpdateAsObservable()
                 .Where(_ => Input.GetMouseButton(0) && !_isClear)
@@ -361,9 +365,25 @@ namespace Connect.InGame
             _currentPutObj = 0;
             _stageObj = null;
 
-            createStage(++_stageNum);
-            UserData.Instance.SetClearStage(UserData.Instance.clearStage + 1);
-            _ingameView.SetStageName(UserData.Instance.clearStage + 1);
+            UserData.Instance.SetClearStage(UserData.Instance.nextStage);
+            _ingameView.SetStageName(UserData.Instance.nextStage);
+
+            createStage(UserData.Instance.nextStage);
+        }
+
+        private void RetryStage()
+        {
+            if(_isClear)
+            {
+                return;
+            }
+
+            cacheStage();
+
+            _currentPutObj = 0;
+            _stageObj = null;
+
+            createStage(UserData.Instance.nextStage);
         }
 
         private void cacheStage()
