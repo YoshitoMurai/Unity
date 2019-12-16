@@ -1,7 +1,4 @@
-﻿using GoogleMobileAds.Api;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Advertisements;
 
 public class AdvertiseManager : MonoBehaviour
@@ -49,7 +46,7 @@ public class AdvertiseManager : MonoBehaviour
         ShowBannerWhenReady();
     }
     public void ShowMovieAds()
-    {
+    
         // Wait until Unity Ads is initialized,
         //  and the default ad placement is ready.
         if (Advertisement.IsReady())
@@ -64,7 +61,6 @@ public class AdvertiseManager : MonoBehaviour
             var bannerHeight = Camera.main.ScreenToWorldPoint(new Vector3(1, 50 * Screen.dpi / 160, 1)).y - Camera.main.ScreenToWorldPoint(new Vector3(1, 0, 1)).y;
             Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
             Advertisement.Banner.Show(placementId);
-            Debug.Log("Show Banner");
         }
     }
 }
