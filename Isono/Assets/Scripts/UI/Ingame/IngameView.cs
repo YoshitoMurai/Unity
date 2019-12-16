@@ -5,6 +5,7 @@ using System;
 using TMPro;
 using Connect;
 using Connect.Common;
+using Connect.InGame;
 
 namespace Connect.InGame.UI
 {
@@ -15,11 +16,13 @@ namespace Connect.InGame.UI
         [SerializeField] private Button _skinChangeButton = default;
         [SerializeField] private TextMeshProUGUI _stageText = default;
         [SerializeField] private GameObject _skinChangeDialog = default;
+        public IObservable<Unit> OnClickBack => _backButton.OnClickAsObservable();
 
         [Header("SkinChange")]
         [SerializeField] private Button _skinBackButton = default;
         [SerializeField] private Button _unlockButton = default;
         [SerializeField] private SkinButton[] _skinButton = default;
+        public IObservable<Unit> OnClickUnlock => _unlockButton.OnClickAsObservable();
         private int selectSkin;
 
         [Header("Clear")]
@@ -30,15 +33,19 @@ namespace Connect.InGame.UI
 
         [SerializeField] private GraphicRaycaster _graphicRaycaster = default;
 
+        public InGameManager ingamemanager;
+
         // Start is called before the first frame update
         public void InitView(int stageNum)
         {
             _titleBackButton.OnClickAsObservable().Subscribe(_ => GameSceneManager.Instance.LoadScene(kSceneType.Title)).AddTo(gameObject);
-            _backButton.OnClickAsObservable().Subscribe(_ => Debug.Log("やり直し")).AddTo(gameObject);
-            _skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
-            _skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);
-            _unlockButton.OnClickAsObservable().Subscribe(_ => AdvertiseManager.Instance.ShowMovieAds());
-            selectSkin = UserData.Instance.selectMaterial;
+            //_skinChangeButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(true)).AddTo(gameObject);
+            //_skinBackButton.OnClickAsObservable().Subscribe(_ => _skinChangeDialog.SetActive(false)).AddTo(gameObject);
+            
+            _skinChangeButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(true)).AddTo(gameObject);
+            _skinBackButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(false)).AddTo(gameObject);
+
+            selectSkin = UserData.Instance.selectSkin;
             for (int i = 0; i < _skinButton.Length; i++)
             {
                 _skinButton[i].Initialize(i,UserData.Instance.isUnsealedSkin[i], selectSkin == i);
@@ -89,6 +96,12 @@ namespace Connect.InGame.UI
         public void SetUnsealedButton(int index)
         {
             _skinButton[index].SetUnsealed();
+        }
+
+        private void SkinChangeUI(bool flag)
+        {
+            _skinChangeDialog.SetActive(flag);
+            ingamemanager.isClearChange(flag);
         }
     }
 }

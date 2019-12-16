@@ -6,6 +6,7 @@ namespace Connect.InGame
     public class PutCube : Cube
     {
         [SerializeField] private LineRenderer lineRenderer = default;
+        private int _layerMask = 1 << 9;
 
         private void AddlineRenderer(Vector3 linepos)
         {
@@ -19,11 +20,10 @@ namespace Connect.InGame
             lineRenderer.SetPosition(0, Vector3.zero);
         }
 
-        public void InitLineRenderer(int connectnumber)
+        public void InitLineRenderer()
         {
-            lineRenderer.startWidth = 0.05f;
-            lineRenderer.endWidth = 0.05f;
-            //lineRenderer.SetWidth(0.05f, 0.05f);
+            lineRenderer.startWidth = 0.1f;
+            lineRenderer.endWidth = 0.1f;
             lineRenderer.SetPosition(0, cubepos);
         }
 
@@ -36,20 +36,20 @@ namespace Connect.InGame
             RaycastHit hit;
 
             // Rayの可視化
-            Debug.DrawLine(lineRenderer.GetPosition(0), putcubpos, Color.red, 3f);
+            Debug.DrawLine(lineRenderer.GetPosition(0), putcubpos, Color.red, 4f);
 
             // Rayの衝突判定
-            if (Physics.Linecast(lineRenderer.GetPosition(0), putcubpos, out hit))
+            if (Physics.Linecast(lineRenderer.GetPosition(0), putcubpos, out hit, _layerMask))
             {
                 //Rayが当たったオブジェクト判定
                 switch (hit.collider.tag)
                 {
-                    case ObjectTagInfo.CONNECT_CUBE:
+                    case ObjectTagInfo.STAGE_CUBE:
                     case ObjectTagInfo.PUT_CUBE:
-                        for (int i = 0; i < connectObj.Count; i++)
+                        for (int i = 0; i < connectObj.Count - 1; i++)
                         {
-                            if (connectObj[i].transform.position == putcubpos || 
-                                hit.collider.gameObject.GetComponent<Cube>().connectFlag[i] && !connectFlag[i])
+                            if ((connectObj[i].transform.position == putcubpos) ||
+                                (hit.collider.GetComponent<Cube>().connectFlag[i] && !connectFlag[i]))
                             {
                                 connectFlag[i] = true;
                             }

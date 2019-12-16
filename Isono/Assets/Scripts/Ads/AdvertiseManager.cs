@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GoogleMobileAds.Api;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -6,6 +7,7 @@ using UnityEngine.Advertisements;
 public class AdvertiseManager : MonoBehaviour
 {
     public string gameID = "3379055";
+    public string placementId = "Banner";
     #region Singleton
 
     private static AdvertiseManager instance;
@@ -43,6 +45,8 @@ public class AdvertiseManager : MonoBehaviour
         if (Advertisement.isSupported) { // If runtime platform is supported...
             Advertisement.Initialize(gameID, true); // ...initialize.
         }
+
+        ShowBannerWhenReady();
     }
     public void ShowMovieAds()
     {
@@ -51,6 +55,16 @@ public class AdvertiseManager : MonoBehaviour
         if (Advertisement.IsReady())
         {
             Advertisement.Show();
+        }
+    }
+    void ShowBannerWhenReady()
+    {
+        if (!Advertisement.IsReady(placementId))
+        {
+            var bannerHeight = Camera.main.ScreenToWorldPoint(new Vector3(1, 50 * Screen.dpi / 160, 1)).y - Camera.main.ScreenToWorldPoint(new Vector3(1, 0, 1)).y;
+            Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
+            Advertisement.Banner.Show(placementId);
+            Debug.Log("Show Banner");
         }
     }
 }

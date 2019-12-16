@@ -6,10 +6,10 @@ namespace Connect.Common
 {
     public class UserData : MonoBehaviour
     {
-        public int clearStage { get; set; }
+        public int clearStage { get; private set; }
         public bool onSound { get; private set; }
         public bool onVibration { get; private set; }
-        public int selectMaterial { get; private set; }
+        public int selectSkin { get; private set; }
         private int skinData;
         public bool[] isUnsealedSkin { get; private set; }
         #region Singleton
@@ -39,16 +39,16 @@ namespace Connect.Common
         public void Awake()
         {
             clearStage = PlayerPrefs.GetInt(CommonInfo.CLEAR_STAGE_NUM);
-
+ 
             var settingFlag = PlayerPrefs.GetInt(CommonInfo.SETTING);
 
             onSound = (settingFlag & 0001) != 0;
             onVibration = (settingFlag & 0010) != 0;
 
-            selectMaterial = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
-            selectMaterial = 0;
+            selectSkin = PlayerPrefs.GetInt(CommonInfo.SELECT_SKIN);
+            selectSkin = 0;
             skinData = PlayerPrefs.GetInt(CommonInfo.UNSEALED_SKIN);
-            skinData = 4095;
+            skinData = 1;
             isUnsealedSkin = new bool[CommonInfo.SKIN_NUM];
             for (int i = 0; i < CommonInfo.SKIN_NUM; i++)
             {
@@ -76,11 +76,12 @@ namespace Connect.Common
         public void SetClearStage(int num)
         {
             PlayerPrefs.SetInt(CommonInfo.CLEAR_STAGE_NUM, num);
+            clearStage = num;
             Save();
         }
-        public void SetMaterial(int num)
+        public void SetSkin(int num)
         {
-            selectMaterial = num;
+            selectSkin = num;
             PlayerPrefs.SetInt(CommonInfo.SELECT_SKIN, num);
             Save();
         }

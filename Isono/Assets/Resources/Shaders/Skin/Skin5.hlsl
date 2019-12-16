@@ -1,5 +1,5 @@
 float hex(float2 p) {
-	p.x *= 1.15;
+	p.x *= 1.25;
 	p.y += frac(floor(p.x) * 0.5);
 	p = abs((frac(p) - 0.5));
 	return abs(max(p.x * 1.5 + p.y, p.y * 2.0) - 1.0);

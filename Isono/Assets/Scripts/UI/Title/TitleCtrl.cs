@@ -30,11 +30,11 @@ namespace Connect.Title
                 .AddTo(gameObject);
 
             _view.onClickInstagram
-                .Subscribe(_ => Application.OpenURL("https://www.instagram.com/baya.sea/"))
+                .Subscribe(_ => Application.OpenURL("https://www.instagram.com/regaliagamestudio/"))
                 .AddTo(gameObject);
             
             _view.onClickTwitter
-                .Subscribe(_ => Application.OpenURL("https://twitter.com/7373Homa"))
+                .Subscribe(_ => Application.OpenURL("https://twitter.com/GameRegalia"))
                 .AddTo(gameObject);
 
             _view.onClickSettingDetail
