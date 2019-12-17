@@ -218,14 +218,14 @@ namespace Connect.InGame
                 provisionalCube.AddLineRenderer(pos, _strandLength);
             }
 
-            // オブジェクトが生成できる場合とできないでUIの色を変える
+            // オブジェクトが生成できる時とできない時でUIの色を変える
             if (Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit))
             {
-
+                provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.Block));
             }
             else
             {
-
+                provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
             }
         }
 
