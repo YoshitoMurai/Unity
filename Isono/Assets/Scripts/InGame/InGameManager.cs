@@ -76,7 +76,6 @@ namespace Connect.InGame
             SetButtonEvent();
 
             mainCamera = Camera.main;
-
             provisionalCube.gameObject.SetActive(false);
 
             _cubeAllList = new List<Cube>();
@@ -180,6 +179,7 @@ namespace Connect.InGame
 
             _stageObj = cubeList.ToArray();
             cubeList.Clear();
+            _ingameView.SetCurrentPutObjText(_rimitObj - _currentPutObj);
 
             foreach (var item in _stageObj)
             {
@@ -242,6 +242,7 @@ namespace Connect.InGame
                 var screenPoint = mainCamera.WorldToScreenPoint(transform.position);
                 var offset = transform.position + mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
                 _currentPutObj++;
+                _ingameView.SetCurrentPutObjText(_rimitObj - _currentPutObj);
 
                 PutCube cube = getCacheCube<PutCube>(_kKeyPutCube);
                 if (cube == null)
