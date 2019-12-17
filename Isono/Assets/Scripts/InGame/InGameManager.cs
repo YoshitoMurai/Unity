@@ -37,7 +37,6 @@ namespace Connect.InGame
         }
 
         private bool _isClear = false;
-        public void isClearChange(bool flag) { _isClear = flag; }
 
         [SerializeField] private GameObject _putObj = default;
         [SerializeField] private int _rimitObj = 3;
@@ -92,6 +91,18 @@ namespace Connect.InGame
                 .Where(_ => Input.GetMouseButtonUp(0) && !UITouchOver() && !_isClear)
                 .Subscribe(_ => ReleaseTouch())
                 .AddTo(gameObject);
+
+            _ingameView.OnClickSkinChange.Subscribe(_ =>
+            {
+                _isClear = true;
+                _ingameView.ChangeSkinUI(_isClear);
+            });
+
+            _ingameView.OnClickSkinBack.Subscribe(_ =>
+            {
+                _isClear = false;
+                _ingameView.ChangeSkinUI(_isClear);
+            });
 
             SetSkin(UserData.Instance.selectSkin);
 

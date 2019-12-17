@@ -19,6 +19,8 @@ namespace Connect.InGame.UI
         [SerializeField] private TextMeshProUGUI _currentPutObjText = default;
 
         public IObservable<Unit> OnClickBack => _backButton.OnClickAsObservable();
+        public IObservable<Unit> OnClickSkinChange => _skinChangeButton.OnClickAsObservable();
+        public IObservable<Unit> OnClickSkinBack => _skinBackButton.OnClickAsObservable();
 
         [Header("SkinChange")]
         [SerializeField] private Button _skinBackButton = default;
@@ -41,8 +43,6 @@ namespace Connect.InGame.UI
         public void InitView(int stageNum)
         {
             _titleBackButton.OnClickAsObservable().Subscribe(_ => GameSceneManager.Instance.LoadScene(kSceneType.Title)).AddTo(gameObject);
-            _skinChangeButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(true)).AddTo(gameObject);
-            _skinBackButton.OnClickAsObservable().Subscribe(_ => SkinChangeUI(false)).AddTo(gameObject);
 
             selectSkin = UserData.Instance.selectSkin;
             for (int i = 0; i < _skinButton.Length; i++)
@@ -97,10 +97,9 @@ namespace Connect.InGame.UI
             _skinButton[index].SetUnsealed();
         }
 
-        private void SkinChangeUI(bool flag)
+        public void ChangeSkinUI(bool flag)
         {
             _skinChangeDialog.SetActive(flag);
-            ingamemanager.isClearChange(flag);
         }
 
         public void SetCurrentPutObjText(int currentPutObj)
