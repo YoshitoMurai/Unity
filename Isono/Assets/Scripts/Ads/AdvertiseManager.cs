@@ -46,6 +46,7 @@ public class AdvertiseManager : MonoBehaviour
         ShowBannerWhenReady();
     }
     public void ShowMovieAds()
+    {
     
         // Wait until Unity Ads is initialized,
         //  and the default ad placement is ready.
