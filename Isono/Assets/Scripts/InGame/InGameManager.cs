@@ -4,8 +4,6 @@ using IsonoGame;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using System.Collections;
-using UnityEngine.UI;
 using Connect.InGame.UI;
 using Connect.Common;
 using System;
@@ -43,23 +41,25 @@ namespace Connect.InGame
         [SerializeField] private int _strandLength = 2;
         [SerializeField] private Cube[] _stageObj = default;
         [SerializeField] private IngameView _ingameView = default;
-        [SerializeField] public int connectCount = 0;
-        public List<Cube> cubeList = default;
+        [SerializeField] private int connectCount = 0;
+        public List<Cube> connectCubeList = default;
         private List<Cube> _cubeAllList = default;
+
+        // 追加
+        [SerializeField] private List<int> connectColor = default;
 
         [SerializeField] private Transform  _linkStageCube = default;
         [SerializeField] private Transform  _linBlockCube = default;
         [SerializeField] private Transform  _cacheCube = default;
         [SerializeField] private int        _stageNum;
 
-        public ProvisionalCube provisionalCube;
+        [SerializeField] private ProvisionalCube _provisionalCube = default;
 
         private Camera mainCamera;
         private int _currentPutObj = 0;
         private Dictionary<int, List<Cube>> _cacheCubeDict = new Dictionary<int, List<Cube>>();
         private SkinManager skinManager;
-
-
+        
         void Start()
         {
             // Debug 毎回1ステージ目から
@@ -75,8 +75,7 @@ namespace Connect.InGame
             SetButtonEvent();
 
             mainCamera = Camera.main;
-            provisionalCube.gameObject.SetActive(false);
-
+            _provisionalCube.gameObject.SetActive(false);
             _cubeAllList = new List<Cube>();
 
             // ステージ生成.
@@ -142,11 +141,11 @@ namespace Connect.InGame
 
             _cubeAllList.Clear();
 
-            if ( cubeList == null )
+            if ( connectCubeList == null )
             {
-                cubeList = new List<Cube>();
+                connectCubeList = new List<Cube>();
             }
-            cubeList.Clear();
+            connectCubeList.Clear();
 
             foreach (var dataPos in stageAsset.CubePosList)
             {
@@ -164,9 +163,9 @@ namespace Connect.InGame
                 }
                 _cubeAllList.Add(cube);
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
-                cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
+                cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
                 cube.SetRotate(false);
-                cubeList.Add(cube);
+                connectCubeList.Add(cube);
             }
 
             foreach (var dataPos in stageAsset.CubeBlockPosList)
@@ -184,22 +183,37 @@ namespace Connect.InGame
                     cube.transform.SetParent(_linBlockCube);
                 }
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
-                cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block));
+                cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block);
                 _cubeAllList.Add(cube);
             }
 
-            _stageObj = cubeList.ToArray();
-            cubeList.Clear();
+            _stageObj = connectCubeList.ToArray();
+            connectCubeList.Clear();
             _ingameView.SetCurrentPutObjText(_rimitObj - _currentPutObj);
+
+            connectCount = _stageObj.Length;
+            connectColor.Clear();
+
+            int max = 0;
 
             foreach (var item in _stageObj)
             {
-                cubeList.Add(item);
+                connectCubeList.Add(item);
+                _provisionalCube.SetLineRendererCount(item);
                 for (int i = 0; i < _stageObj.Length; i++)
                 {
                     _stageObj[i].SetStatus(item);
                 }
-                provisionalCube.SetLineRendererCount(item);
+
+                if(max < item._colorNumber + 1)
+                {
+                    max = item._colorNumber + 1;
+                }
+            }
+
+            for(int i = 0; i < max; i++)
+            {
+                connectColor.Add(0);
             }
         }
 
@@ -225,18 +239,18 @@ namespace Connect.InGame
             if (EventSystem.current.currentSelectedGameObject == null)
             {
                 pos = new Vector3(pos.x, pos.y, 0f);
-                provisionalCube.gameObject.SetActive(true);
-                provisionalCube.AddLineRenderer(pos, _strandLength);
+                _provisionalCube.gameObject.SetActive(true);
+                _provisionalCube.AddLineRenderer(pos, _strandLength);
             }
 
             // オブジェクトが生成できる時とできない時でUIの色を変える
             if (Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit))
             {
-                provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.Block));
+                _provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block);
             }
             else
             {
-                provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
+                _provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
             }
         }
 
@@ -245,7 +259,7 @@ namespace Connect.InGame
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
 
-            provisionalCube.gameObject.SetActive(false);
+            _provisionalCube.gameObject.SetActive(false);
 
             // オブジェクトがあった場合は、生成させない
             if (!Physics.BoxCast(ray.origin, new Vector3(0.6f, 0.6f, 0.6f), ray.direction, out hit) && _currentPutObj < _rimitObj)
@@ -267,7 +281,7 @@ namespace Connect.InGame
                     cube.transform.SetParent(_linkStageCube);
                 }
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
-                cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
+                cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);
                 cube.transform.rotation = Quaternion.identity;
                 SetStrand(cube);
             }
@@ -275,58 +289,116 @@ namespace Connect.InGame
 
         private void SetStrand(PutCube putCube)
         {
-            cubeList.Add(putCube);
+            connectCubeList.Add(putCube);
             _cubeAllList.Add(putCube);
-            provisionalCube.SetLineRendererCount(putCube);
+            _provisionalCube.SetLineRendererCount(putCube);
 
             // PutCubeに各ブロック判定を追加
-            foreach (var item in cubeList)
+            foreach (var item in connectCubeList)
             {
                 putCube.SetStatus(item);
             }
 
             putCube.InitLineRenderer();
 
-            for (int i = 0; i < cubeList.Count - 1; i++)
+            for (int i = 0; i < connectCubeList.Count - 1; i++)
             {
                 // 生成したPutCubeの判定を追加
-                cubeList[i].SetStatus(putCube);
-                if (Vector2.Distance(putCube.cubepos, cubeList[i].cubepos) < _strandLength)
+                connectCubeList[i].SetStatus(putCube);
+                if (Vector2.Distance(putCube.cubepos, connectCubeList[i].cubepos) < _strandLength)
                 {
-                    putCube.AddLineRendererObj(cubeList[i].cubepos);
+                    putCube.AddLineRendererObj(connectCubeList[i].cubepos);
                 }
             }
 
             putCube.ChangeLayer(9);
 
             // 生成されているボックスの判定を更新
-            for (int i = 0; i < cubeList.Count; i++)
+            for (int i = 0; i < connectCubeList.Count; i++)
             {
-                var cube = cubeList[i];
+                var cube = connectCubeList[i];
                 for (int j = 0; j < putCube.connectFlag.Count; j++)
                 {
                     if (putCube.connectFlag[i])
                     {
                         cube.connectFlag[j] = putCube.connectFlag[j];
+
+                        // つながっているStageCubeを格納
+                        if (cube._stageCube.Count == 0)
+                        {
+                            foreach(var stagecube in putCube._stageCube)
+                            {
+                                cube._stageCube.Add(stagecube);
+                            }
+                        }
                     }
                 }
 
-                if (putCube.connectFlag[i] && i < _stageObj.Length)
+                //if (putCube.connectFlag[i] && i < _stageObj.Length)
+                //{
+                //    cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
+                //    cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);
+                //    cube.SetRotate(true);
+                //    connectCount++;
+                //}
+            }
+
+            // 追加
+            if (1 < putCube._stageCube.Count)
+            {
+                List<int> colorChuck = new List<int>();
+
+                // Cubeの色が一致しているかを調べる
+                for (int a = 0; a < putCube._stageCube.Count; a++)
                 {
-                    cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
-                    cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
-                    cube.SetRotate(true);
-                    connectCount++;
+                    connectColor[putCube._stageCube[a]._colorNumber]++;
+                }
+
+                for(int b = 0; b < connectColor.Count; b++)
+                {
+                    if(1 < connectColor[b])
+                    {
+                        colorChuck.Add(b);
+                        connectColor[b] = 0;
+                    }
+                }
+
+                // 色が一致したCubeを非表示にする予定
+                for (int j = 0; j < putCube._instantiateCube.Count; j++)
+                {
+                    if (putCube.connectFlag[j] && putCube._instantiateCube[j].gameObject.activeSelf)
+                    {
+                        switch (putCube._instantiateCube[j].tag)
+                        {
+                            case ObjectTagInfo.STAGE_CUBE:
+                                foreach(var color in colorChuck)
+                                {
+                                    if(color == putCube._instantiateCube[j]._colorNumber)
+                                    {
+                                        putCube._instantiateCube[j].transform.SetParent(_cacheCube);
+                                        putCube._instantiateCube[j].gameObject.SetActive(false);
+                                        connectCount--;
+                                    }
+                                }
+                                break;
+                            case ObjectTagInfo.PUT_CUBE:
+                                putCube._instantiateCube[j].transform.SetParent(_cacheCube);
+                                putCube._instantiateCube[j].gameObject.SetActive(false);
+                                break;
+                            default: break;
+                        }
+                        _provisionalCube.InitLineRemove(putCube._instantiateCube[j]);
+                    }
                 }
             }
 
-            if (_stageObj.Length <= connectCount)
+            if (connectCount == 0)
             {
                 GameClear();
             }
             else
             {
-                connectCount = 0;
+                //connectFlag.Clear();
             }
         }
 
@@ -334,7 +406,7 @@ namespace Connect.InGame
         {
             _isClear = true;
             _ingameView.SetActiveClear(true);
-            connectCount = 0;
+            //connectColor.Clear();
         }
 
         private void SetSkin(int index) { SetSkin(index, true); }
@@ -350,20 +422,19 @@ namespace Connect.InGame
                 switch (_cubeAllList[i].tag)
                 {
                     case ObjectTagInfo.STAGE_CUBE:
-                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
+                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
                         break;
-
                     case ObjectTagInfo.PUT_CUBE:
-                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect));
+                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);
                         break;
                     case ObjectTagInfo.BLOCK_CUBE:
-                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block));
+                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block);
                         break;
                     default: Debug.Log("スキンがねぇな"); break;
                 }
             }
-            provisionalCube.SetSkin(skinManager.skins[index]);
-            provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect));
+            _provisionalCube.SetSkin(skinManager.skins[index]);
+            _provisionalCube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
         }
 
         private void NextStage()
@@ -432,8 +503,8 @@ namespace Connect.InGame
                     lineCube.InitLineReset();
                 }
             }
-            provisionalCube.InitLineReset();
-            provisionalCube.Clear();
+            _provisionalCube.InitLineReset();
+            _provisionalCube.Clear();
 
         }
 

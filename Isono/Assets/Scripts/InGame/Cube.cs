@@ -6,12 +6,15 @@ namespace Connect.InGame
     public class Cube : MonoBehaviour
     {
         public Vector3 cubepos => new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        public List<Cube> _instantiateCube;
         public List<bool> connectFlag;
-        public List<Cube> connectObj = default;
         public Material cubeMaterial = default;
         [SerializeField] private Rotate rotate = default;
         private Material mat;
         bool init = false;
+
+        public List<Cube> _stageCube;
+        public int _colorNumber;
 
         public void ChangeLayer(int layer)
         {
@@ -28,9 +31,15 @@ namespace Connect.InGame
             if (!init) InitMaterial(shader);
             mat.shader = shader;
         }
-        public void SetColor(Color color)
+        public void SetColor(Color color, SkinColorType colornumber)
         {
             mat.SetColor("_Color", color);
+            //_colorNumber = (int)colornumber;
+
+            // デバッグ用
+            //_colorNumber = Random.Range(0, 2);
+            _colorNumber = 1;
+
         }
         public void SetRotate(bool isRotate)
         {
@@ -40,7 +49,7 @@ namespace Connect.InGame
 
         public void SetStatus(Cube cube)
         {
-            connectObj.Add(cube);
+            _instantiateCube.Add(cube);
 
             if (cubepos != cube.transform.position)
             {
@@ -54,7 +63,8 @@ namespace Connect.InGame
 
         public void Clear()
         {
-            connectObj.Clear();
+            _stageCube.Clear();
+            _instantiateCube.Clear();
             connectFlag.Clear();
             switch (gameObject.tag)
             {
