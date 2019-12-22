@@ -107,11 +107,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8878117d5b921b4fbacd0be5223fa7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectFlag: 
-  connectObj: []
+  _instantiateCube: []
   cubeMaterial: {fileID: 0}
   rotate: {fileID: -1300965900333040937}
-  aaa: []
+  _stageCube: []
+  _colorNumber: 0
   lineRenderer: {fileID: 8804931860450670966}
 --- !u!120 &8804931860450670966
 LineRenderer:
