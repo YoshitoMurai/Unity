@@ -147,20 +147,21 @@ namespace Connect.InGame
             }
             connectCubeList.Clear();
 
-            foreach (var dataPos in stageAsset.CubePosList)
+            foreach (var data in stageAsset.cubeStageDataList)
             {
                 var cube = getCacheCube<StageCube>(_kKeyStageCube);
                 if (cube == null)
                 {
                     var cubePrefab = ResourceManager.Load<GameObject>(_kPathCunnectCubePrefab);
-                    var cubeObj    = Instantiate(cubePrefab, dataPos, Quaternion.identity, _linkStageCube);
+                    var cubeObj    = Instantiate(cubePrefab, data.pos, Quaternion.identity, _linkStageCube);
                     cube           = cubeObj.GetComponent<StageCube>();
                 }
                 else
                 {
-                    cube.transform.localPosition = dataPos;
+                    cube.transform.localPosition = data.pos;
                     cube.transform.SetParent(_linkStageCube);
                 }
+                cube._colorNumber = data.colorNum;
                 _cubeAllList.Add(cube);
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
                 cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
@@ -168,20 +169,21 @@ namespace Connect.InGame
                 connectCubeList.Add(cube);
             }
 
-            foreach (var dataPos in stageAsset.CubeBlockPosList)
+            foreach (var data in stageAsset.cubeBlockDataList)
             {
                 var cube = getCacheCube<BlockCube>(_kKeyBlockCube);
                 if (cube == null)
                 {
                     var cubePrefab = ResourceManager.Load<GameObject>(_kPathBlockCubePrefab);
-                    var cubeObj = Instantiate(cubePrefab, dataPos, Quaternion.identity, _linBlockCube);
+                    var cubeObj = Instantiate(cubePrefab, data.pos, Quaternion.identity, _linBlockCube);
                     cube = cubeObj.GetComponent<BlockCube>();
                 }
                 else
                 {
-                    cube.transform.localPosition = dataPos;
+                    cube.transform.localPosition = data.pos;
                     cube.transform.SetParent(_linBlockCube);
                 }
+                cube._colorNumber = data.colorNum;
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
                 cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block);
                 _cubeAllList.Add(cube);
@@ -533,12 +535,14 @@ namespace Connect.InGame
 
             foreach (Transform cubeTransform in _linkStageCube)
             {
-                asset.Add(cubeTransform.localPosition);
+                var cube = cubeTransform.GetComponent<Cube>();
+                asset.Add(new StageData(cube._colorNumber, cube.transform.localPosition));
             }
 
             foreach (Transform cubeTransform in _linBlockCube)
             {
-                asset.AddBlock(cubeTransform.localPosition);
+                var cube = cubeTransform.GetComponent<Cube>();
+                asset.AddBlock(new StageData(cube._colorNumber, cube.transform.localPosition));
             }
 
             asset.SetDirtyForEditor();
@@ -555,18 +559,24 @@ namespace Connect.InGame
                 return;
             }
 
-            foreach (var cubeTransform in asset.CubePosList)
+            foreach (var cubeData in asset.cubeStageDataList)
             {
                 var cubePrefab = AssetDatabase.LoadAssetAtPath(_kPathFullStageCubePrefab, typeof( GameObject )) as GameObject;
                 var cubeObj    = PrefabUtility.InstantiatePrefab(cubePrefab, _linkStageCube.transform) as GameObject;
-                cubeObj.transform.localPosition = cubeTransform;
+                var cube       = cubeObj.GetComponent<Cube>();
+
+                cube._colorNumber = cubeData.colorNum;
+                cube.transform.localPosition = cubeData.pos;
             }
 
-            foreach (var cubeTransform in asset.CubeBlockPosList)
+            foreach (var cubeData in asset.cubeBlockDataList)
             {
                 var cubePrefab = AssetDatabase.LoadAssetAtPath(_kPathFullBlockCubePrefab, typeof(GameObject)) as GameObject;
                 var cubeObj    = PrefabUtility.InstantiatePrefab(cubePrefab, _linBlockCube.transform) as GameObject;
-                cubeObj.transform.localPosition = cubeTransform;
+                var cube       = cubeObj.GetComponent<Cube>();
+
+                cube._colorNumber = cubeData.colorNum;
+                cube.transform.localPosition = cubeData.pos;
             }
         }
 

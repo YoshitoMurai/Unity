@@ -12,11 +12,11 @@ namespace Connect.InGame
         const string _kAssetFullPathFormat     = "Assets/Resources/" + _kAssetResourcePathFormat;
         const string _kAssetResourcePathFormat = "ScriptableObject/InGame/Stage_{0:000}.asset";
 
-        [SerializeField] List<Vector3> _cubePosList;
-        [SerializeField] List<Vector3> _cubeBlockPosList = default;
+        [SerializeField] List<StageData> _cubeStageDataList;
+        [SerializeField] List<StageData> _cubeBlockDataList = default;
 
-        public List<Vector3> CubePosList { get => _cubePosList; }
-        public List<Vector3> CubeBlockPosList { get => _cubeBlockPosList; }
+        public List<StageData> cubeStageDataList { get => _cubeStageDataList; }
+        public List<StageData> cubeBlockDataList { get => _cubeBlockDataList; }
 
         /// <summary>
         /// ロード.
@@ -76,19 +76,19 @@ namespace Connect.InGame
         /// <summary>
         /// 追加.
         /// </summary>
-        /// <param name="pos"></param>
-        public void Add(Vector3 pos)
+        /// <param name="data"></param>
+        public void Add(StageData data)
         {
-            _cubePosList.Add(pos);
+            _cubeStageDataList.Add(data);
         }
 
         /// <summary>
         /// ギミック追加.
         /// </summary>
-        /// <param name="pos"></param>
-        public void AddBlock(Vector3 pos)
+        /// <param name="data"></param>
+        public void AddBlock(StageData data)
         {
-            _cubeBlockPosList.Add(pos);
+            _cubeBlockDataList.Add(data);
         }
 
         /// <summary>
@@ -96,13 +96,31 @@ namespace Connect.InGame
         /// </summary>
         public void Clear()
         {
-            if (_cubePosList == null)
+            if (_cubeStageDataList == null)
             {
-                _cubePosList = new List<Vector3>();
+                _cubeStageDataList = new List<StageData>();
+                _cubeBlockDataList = new List<StageData>();
                 return;
             }
-            _cubePosList.Clear();
+            _cubeStageDataList.Clear();
+            _cubeBlockDataList.Clear();
         }
 #endif
+    }
+
+    [System.Serializable]
+    public class StageData
+    {
+        [SerializeField] private int _colorNum;
+        [SerializeField] private Vector3 _pos;
+
+        public int colorNum { get => _colorNum; }
+        public Vector3 pos { get => _pos; }
+
+        public StageData(int colorNum, Vector3 pos)
+        {
+            _colorNum = colorNum;
+            _pos      = pos;
+        }
     }
 }
