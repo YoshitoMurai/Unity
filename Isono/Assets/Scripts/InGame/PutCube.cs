@@ -41,25 +41,49 @@ namespace Connect.InGame
             // Rayの衝突判定
             if (Physics.Linecast(lineRenderer.GetPosition(0), putcubpos, out hit, _layerMask))
             {
-                //Rayが当たったオブジェクト判定
-                switch (hit.collider.tag)
-                {
-                    case ObjectTagInfo.STAGE_CUBE:
-                    case ObjectTagInfo.PUT_CUBE:
-                        for (int i = 0; i < connectObj.Count - 1; i++)
-                        {
-                            if ((connectObj[i].transform.position == putcubpos) ||
-                                (hit.collider.GetComponent<Cube>().connectFlag[i] && !connectFlag[i]))
-                            {
-                                connectFlag[i] = true;
-                            }
-                        }
-                        AddlineRenderer(putcubpos);
-                        AddlineRenderer(cubepos);
-                        break;
+                var hitcube = hit.collider.gameObject.GetComponent<Cube>();
 
-                    case ObjectTagInfo.BLOCK_CUBE: break;
-                    default: break;
+                //Rayが当たったオブジェクト判定
+                if (hit.collider.tag != ObjectTagInfo.BLOCK_CUBE)
+                {
+                    for (int i = 0; i < _instantiateCube.Count - 1; i++)
+                    {
+                        if ((_instantiateCube[i].transform.position == putcubpos) ||
+                            (hit.collider.GetComponent<Cube>().connectFlag[i] && !connectFlag[i]))
+                        {
+                            connectFlag[i] = true;
+
+                        }
+                    }
+                    AddlineRenderer(putcubpos);
+                    AddlineRenderer(cubepos);
+
+                    switch (hit.collider.tag)
+                    {
+                        case ObjectTagInfo.STAGE_CUBE:
+                            _stageCube.Add(hitcube);
+                            break;
+
+                        case ObjectTagInfo.PUT_CUBE:
+                            for(int i = 0; i < hitcube._stageCube.Count; i++)
+                            {
+                                if(_stageCube.Count != 0)
+                                {
+                                    if (_stageCube[i].transform.position != hitcube._stageCube[i].transform.position)
+                                    {
+                                        _stageCube.Add(hitcube._stageCube[i]);
+                                    }
+                                }
+                                else
+                                {
+                                    _stageCube.Add(hitcube._stageCube[i]);
+                                }
+                            }
+                            break;
+
+                        default: break;
+                    }
+
                 }
             }
         }
