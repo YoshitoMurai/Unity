@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3729ddb195c103249ae89498099f6dff, type: 3}
   m_Name: Stage_001
   m_EditorClassIdentifier: 
-  _cubePosList:
-  - {x: -1.5, y: 2.21, z: 0}
-  - {x: 0.39, y: 4.13, z: 0}
-  - {x: 0.39, y: -1.55, z: 0}
-  _cubeBlockPosList:
-  - {x: 1.84, y: 3.15, z: 0}
-  - {x: -0.94, y: 0.27, z: 0}
+  _cubeStageDataList:
+  - _colorNum: 1
+    _pos: {x: 0.15, y: 2.09, z: 0}
+  - _colorNum: 1
+    _pos: {x: -1.37, y: -0.15, z: 0}
+  - _colorNum: 1
+    _pos: {x: 1.82, y: -0.1, z: 0}
+  _cubeBlockDataList: []
