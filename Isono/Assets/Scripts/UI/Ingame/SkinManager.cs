@@ -13,7 +13,7 @@ namespace Connect.InGame
 
         // デバック用
         green,
-        pinke,
+        pink,
     }
 	public class SkinManager 
 	{
@@ -30,7 +30,7 @@ namespace Connect.InGame
 
         // デバック用
         [SerializeField] private Color _green = new Color(0.0f, 1.0f, 0.0f, 1.0f);
-        [SerializeField] private Color _pinke = new Color(0.0f, 1.0f, 0.75f, 1.0f);
+        [SerializeField] private Color _pink = new Color(0.0f, 1.0f, 0.75f, 1.0f);
 
         private Color _errorColor = new Color(1.0f, 0.5f, 0.5f, 1.0f);
         public void LoadSkinData()
@@ -64,7 +64,7 @@ namespace Connect.InGame
 
                 // デバック用
                 case SkinColorType.green: return _green;
-                case SkinColorType.pinke: return _pinke;
+                case SkinColorType.pink: return _pink;
             }
             return _errorColor;
         }
