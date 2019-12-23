@@ -47,6 +47,7 @@ namespace Connect.InGame
 
         // 追加
         [SerializeField] private List<int> connectColor = default;
+        public List<int> colorChuck = new List<int>();
 
         [SerializeField] private Transform  _linkStageCube = default;
         [SerializeField] private Transform  _linBlockCube = default;
@@ -103,7 +104,7 @@ namespace Connect.InGame
                 _ingameView.ChangeSkinUI(_isClear);
             });
 
-            SetSkin(UserData.Instance.selectSkin);
+            //SetSkin(UserData.Instance.selectSkin);
 
             // スキン変更
             _ingameView.OnClickSkin
@@ -196,6 +197,7 @@ namespace Connect.InGame
             connectCount = _stageObj.Length;
             connectColor.Clear();
 
+            SetSkin(UserData.Instance.selectSkin);
             int max = 0;
 
             foreach (var item in _stageObj)
@@ -348,7 +350,6 @@ namespace Connect.InGame
             // 追加
             if (1 < putCube._stageCube.Count)
             {
-                List<int> colorChuck = new List<int>();
 
                 // Cubeの色が一致しているかを調べる
                 for (int a = 0; a < putCube._stageCube.Count; a++)
@@ -361,36 +362,40 @@ namespace Connect.InGame
                     if(1 < connectColor[b])
                     {
                         colorChuck.Add(b);
-                        connectColor[b] = 0;
                     }
+                    connectColor[b] = 0;
                 }
 
                 // 色が一致したCubeを非表示にする予定
-                for (int j = 0; j < putCube._instantiateCube.Count; j++)
+                if (colorChuck.Count != 0)
                 {
-                    if (putCube.connectFlag[j] && putCube._instantiateCube[j].gameObject.activeSelf)
+                    for (int j = 0; j < putCube._instantiateCube.Count; j++)
                     {
-                        switch (putCube._instantiateCube[j].tag)
+                        if (putCube.connectFlag[j] && putCube._instantiateCube[j].gameObject.activeSelf)
                         {
-                            case ObjectTagInfo.STAGE_CUBE:
-                                foreach(var color in colorChuck)
-                                {
-                                    if(color == putCube._instantiateCube[j]._colorNumber)
+                            switch (putCube._instantiateCube[j].tag)
+                            {
+                                case ObjectTagInfo.STAGE_CUBE:
+                                    foreach (var color in colorChuck)
                                     {
-                                        putCube._instantiateCube[j].transform.SetParent(_cacheCube);
-                                        putCube._instantiateCube[j].gameObject.SetActive(false);
-                                        connectCount--;
+                                        if (color == putCube._instantiateCube[j]._colorNumber)
+                                        {
+                                            putCube._instantiateCube[j].transform.SetParent(_cacheCube);
+                                            putCube._instantiateCube[j].gameObject.SetActive(false);
+                                            connectCount--;
+                                        }
                                     }
-                                }
-                                break;
-                            case ObjectTagInfo.PUT_CUBE:
-                                putCube._instantiateCube[j].transform.SetParent(_cacheCube);
-                                putCube._instantiateCube[j].gameObject.SetActive(false);
-                                break;
-                            default: break;
+                                    break;
+                                case ObjectTagInfo.PUT_CUBE:
+                                    putCube._instantiateCube[j].transform.SetParent(_cacheCube);
+                                    putCube._instantiateCube[j].gameObject.SetActive(false);
+                                    break;
+                                default: break;
+                            }
+                            _provisionalCube.InitLineRemove(putCube._instantiateCube[j]);
                         }
-                        _provisionalCube.InitLineRemove(putCube._instantiateCube[j]);
                     }
+                    //colorChuck.Clear();
                 }
             }
 
@@ -424,7 +429,19 @@ namespace Connect.InGame
                 switch (_cubeAllList[i].tag)
                 {
                     case ObjectTagInfo.STAGE_CUBE:
-                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
+                        //if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
+                        // デバッグ用
+                        if (resetColor)
+                        {
+                            int num = UnityEngine.Random.Range(0, 2);
+                            //int num = 0;
+
+                            switch (num)
+                            {
+                                case 0: cube.SetColor(skinManager.GetSkinColor(SkinColorType.green), SkinColorType.green); break;
+                                case 1: cube.SetColor(skinManager.GetSkinColor(SkinColorType.pinke), SkinColorType.pinke); break;
+                            }
+                        }
                         break;
                     case ObjectTagInfo.PUT_CUBE:
                         if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);

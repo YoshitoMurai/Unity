@@ -34,12 +34,7 @@ namespace Connect.InGame
         public void SetColor(Color color, SkinColorType colornumber)
         {
             mat.SetColor("_Color", color);
-            //_colorNumber = (int)colornumber;
-
-            // デバッグ用
-            //_colorNumber = Random.Range(0, 2);
-            _colorNumber = 1;
-
+            _colorNumber = (int)colornumber;
         }
         public void SetRotate(bool isRotate)
         {

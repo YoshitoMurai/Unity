@@ -10,6 +10,10 @@ namespace Connect.InGame
         Connect,
         UnConnect,
         Block,
+
+        // デバック用
+        green,
+        pinke,
     }
 	public class SkinManager 
 	{
@@ -23,6 +27,11 @@ namespace Connect.InGame
         [SerializeField] private Color _connectColor = new Color ( 1.3f, 0.87f, 0.0f, 1.0f );
         [SerializeField] private Color _unconnectColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         [SerializeField] private Color _blockColor = new Color(1.0f, 0.0f, 0.25f, 1.0f);
+
+        // デバック用
+        [SerializeField] private Color _green = new Color(0.0f, 1.0f, 0.0f, 1.0f);
+        [SerializeField] private Color _pinke = new Color(0.0f, 1.0f, 0.75f, 1.0f);
+
         private Color _errorColor = new Color(1.0f, 0.5f, 0.5f, 1.0f);
         public void LoadSkinData()
 		{
@@ -52,6 +61,10 @@ namespace Connect.InGame
                 case SkinColorType.Connect:return _connectColor;
                 case SkinColorType.UnConnect:return _unconnectColor;
                 case SkinColorType.Block:return _blockColor;
+
+                // デバック用
+                case SkinColorType.green: return _green;
+                case SkinColorType.pinke: return _pinke;
             }
             return _errorColor;
         }
