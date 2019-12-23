@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Stage_001
   m_EditorClassIdentifier: 
   _cubeStageDataList:
-  - _colorNum: 1
-    _pos: {x: 0.15, y: 2.09, z: 0}
-  - _colorNum: 1
-    _pos: {x: -1.37, y: -0.15, z: 0}
-  - _colorNum: 1
-    _pos: {x: 1.82, y: -0.1, z: 0}
+  - _colorNum: 3
+    _pos: {x: 0, y: 3, z: 0}
+  - _colorNum: 4
+    _pos: {x: 0, y: 0, z: 0}
+  - _colorNum: 3
+    _pos: {x: -2, y: 1.4, z: 0}
+  - _colorNum: 4
+    _pos: {x: 2, y: 1.4, z: 0}
   _cubeBlockDataList: []

@@ -47,7 +47,7 @@ namespace Connect.InGame
 
         // 追加
         [SerializeField] private List<int> connectColor = default;
-        public List<int> colorChuck = new List<int>();
+        //public List<int> colorChuck = new List<int>();
 
         [SerializeField] private Transform  _linkStageCube = default;
         [SerializeField] private Transform  _linBlockCube = default;
@@ -104,7 +104,7 @@ namespace Connect.InGame
                 _ingameView.ChangeSkinUI(_isClear);
             });
 
-            //SetSkin(UserData.Instance.selectSkin);
+            SetSkin(UserData.Instance.selectSkin);
 
             // スキン変更
             _ingameView.OnClickSkin
@@ -117,7 +117,6 @@ namespace Connect.InGame
         }
         private void SetButtonEvent()
         {
-            
             _ingameView.OnClickClear
                 .ThrottleFirst(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => NextStage())
@@ -165,7 +164,15 @@ namespace Connect.InGame
                 cube._colorNumber = data.colorNum;
                 _cubeAllList.Add(cube);
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
-                cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
+                switch (cube._colorNumber)
+                {
+                    case 0: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect); break;
+                    case 1: cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect); break;
+                    case 2: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block); break;
+                    case 3: cube.SetColor(skinManager.GetSkinColor(SkinColorType.green), SkinColorType.green); break;
+                    case 4: cube.SetColor(skinManager.GetSkinColor(SkinColorType.pink), SkinColorType.pink); break;
+                    default: break;
+                }
                 cube.SetRotate(false);
                 connectCubeList.Add(cube);
             }
@@ -197,7 +204,6 @@ namespace Connect.InGame
             connectCount = _stageObj.Length;
             connectColor.Clear();
 
-            SetSkin(UserData.Instance.selectSkin);
             int max = 0;
 
             foreach (var item in _stageObj)
@@ -350,6 +356,7 @@ namespace Connect.InGame
             // 追加
             if (1 < putCube._stageCube.Count)
             {
+                List<int> colorChuck = new List<int>();
 
                 // Cubeの色が一致しているかを調べる
                 for (int a = 0; a < putCube._stageCube.Count; a++)
@@ -382,6 +389,7 @@ namespace Connect.InGame
                                         {
                                             putCube._instantiateCube[j].transform.SetParent(_cacheCube);
                                             putCube._instantiateCube[j].gameObject.SetActive(false);
+                                            _provisionalCube.InitLineRemove(putCube._instantiateCube[j]);
                                             connectCount--;
                                         }
                                     }
@@ -389,10 +397,10 @@ namespace Connect.InGame
                                 case ObjectTagInfo.PUT_CUBE:
                                     putCube._instantiateCube[j].transform.SetParent(_cacheCube);
                                     putCube._instantiateCube[j].gameObject.SetActive(false);
+                                    _provisionalCube.InitLineRemove(putCube._instantiateCube[j]);
                                     break;
                                 default: break;
                             }
-                            _provisionalCube.InitLineRemove(putCube._instantiateCube[j]);
                         }
                     }
                     //colorChuck.Clear();
@@ -429,19 +437,19 @@ namespace Connect.InGame
                 switch (_cubeAllList[i].tag)
                 {
                     case ObjectTagInfo.STAGE_CUBE:
-                        //if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
-                        // デバッグ用
                         if (resetColor)
                         {
-                            int num = UnityEngine.Random.Range(0, 2);
-                            //int num = 0;
-
-                            switch (num)
+                            switch (cube._colorNumber)
                             {
-                                case 0: cube.SetColor(skinManager.GetSkinColor(SkinColorType.green), SkinColorType.green); break;
-                                case 1: cube.SetColor(skinManager.GetSkinColor(SkinColorType.pinke), SkinColorType.pinke); break;
+                                case 0: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect); break;
+                                case 1: cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect); break;
+                                case 2: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block); break;
+                                case 3: cube.SetColor(skinManager.GetSkinColor(SkinColorType.green), SkinColorType.green); break;
+                                case 4: cube.SetColor(skinManager.GetSkinColor(SkinColorType.pink), SkinColorType.pink);   break;
+                                default: break;
                             }
                         }
+                        //if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
                         break;
                     case ObjectTagInfo.PUT_CUBE:
                         if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);
