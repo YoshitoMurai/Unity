@@ -40,7 +40,6 @@ namespace Connect.InGame
                 else
                 {
                     lineRenderer.SetPosition((i * 2) + 1, transform.position);
-
                 }
             }
         }

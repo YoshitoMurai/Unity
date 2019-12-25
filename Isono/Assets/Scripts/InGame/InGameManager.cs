@@ -164,15 +164,7 @@ namespace Connect.InGame
                 cube._colorNumber = data.colorNum;
                 _cubeAllList.Add(cube);
                 cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
-                switch (cube._colorNumber)
-                {
-                    case 0: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect); break;
-                    case 1: cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect); break;
-                    case 2: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block); break;
-                    case 3: cube.SetColor(skinManager.GetSkinColor(SkinColorType.green), SkinColorType.green); break;
-                    case 4: cube.SetColor(skinManager.GetSkinColor(SkinColorType.pink), SkinColorType.pink); break;
-                    default: break;
-                }
+                SetColor(cube);
                 cube.SetRotate(false);
                 connectCubeList.Add(cube);
             }
@@ -244,7 +236,6 @@ namespace Connect.InGame
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
             var pos = mainCamera.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward);
-
 
             if (EventSystem.current.currentSelectedGameObject == null)
             {
@@ -343,13 +334,11 @@ namespace Connect.InGame
                         }
                     }
                 }
-
                 //if (putCube.connectFlag[i] && i < _stageObj.Length)
                 //{
                 //    cube.InitMaterial(skinManager.skins[UserData.Instance.selectSkin]);
                 //    cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);
                 //    cube.SetRotate(true);
-                //    connectCount++;
                 //}
             }
 
@@ -424,6 +413,19 @@ namespace Connect.InGame
             //connectColor.Clear();
         }
 
+        private void SetColor(Cube cube)
+        {
+            switch (cube._colorNumber)
+            {
+                case 0: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect); break;
+                case 1: cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect); break;
+                case 2: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block); break;
+                case 3: cube.SetColor(skinManager.GetSkinColor(SkinColorType.green), SkinColorType.green); break;
+                case 4: cube.SetColor(skinManager.GetSkinColor(SkinColorType.pink), SkinColorType.pink); break;
+                default: break;
+            }
+        }
+
         private void SetSkin(int index) { SetSkin(index, true); }
         private void SetSkin(int index, bool resetColor)
         {
@@ -434,30 +436,21 @@ namespace Connect.InGame
             {
                 var cube = _cubeAllList[i].GetComponent<Cube>();
                 cube.SetSkin(skinManager.skins[index]);
-                switch (_cubeAllList[i].tag)
+                if (resetColor)
                 {
-                    case ObjectTagInfo.STAGE_CUBE:
-                        if (resetColor)
-                        {
-                            switch (cube._colorNumber)
-                            {
-                                case 0: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect); break;
-                                case 1: cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect); break;
-                                case 2: cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block); break;
-                                case 3: cube.SetColor(skinManager.GetSkinColor(SkinColorType.green), SkinColorType.green); break;
-                                case 4: cube.SetColor(skinManager.GetSkinColor(SkinColorType.pink), SkinColorType.pink);   break;
-                                default: break;
-                            }
-                        }
-                        //if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.UnConnect), SkinColorType.UnConnect);
-                        break;
-                    case ObjectTagInfo.PUT_CUBE:
-                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);
-                        break;
-                    case ObjectTagInfo.BLOCK_CUBE:
-                        if (resetColor) cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block);
-                        break;
-                    default: Debug.Log("スキンがねぇな"); break;
+                    switch (cube.tag)
+                    {
+                        case ObjectTagInfo.STAGE_CUBE:
+                            SetColor(cube);
+                            break;
+                        case ObjectTagInfo.PUT_CUBE:
+                            cube.SetColor(skinManager.GetSkinColor(SkinColorType.Connect), SkinColorType.Connect);
+                            break;
+                        case ObjectTagInfo.BLOCK_CUBE:
+                            cube.SetColor(skinManager.GetSkinColor(SkinColorType.Block), SkinColorType.Block);
+                            break;
+                        default: Debug.Log("スキンがねぇな"); break;
+                    }
                 }
             }
             _provisionalCube.SetSkin(skinManager.skins[index]);

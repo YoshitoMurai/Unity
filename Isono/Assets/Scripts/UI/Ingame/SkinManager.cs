@@ -11,7 +11,7 @@ namespace Connect.InGame
         UnConnect,
         Block,
 
-        // デバック用
+        // 追加
         green,
         pink,
     }
@@ -28,7 +28,7 @@ namespace Connect.InGame
         [SerializeField] private Color _unconnectColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         [SerializeField] private Color _blockColor = new Color(1.0f, 0.0f, 0.25f, 1.0f);
 
-        // デバック用
+        // 追加
         [SerializeField] private Color _green = new Color(0.0f, 1.0f, 0.0f, 1.0f);
         [SerializeField] private Color _pink = new Color(0.0f, 1.0f, 0.75f, 1.0f);
 
@@ -62,7 +62,7 @@ namespace Connect.InGame
                 case SkinColorType.UnConnect:return _unconnectColor;
                 case SkinColorType.Block:return _blockColor;
 
-                // デバック用
+                // 追加
                 case SkinColorType.green: return _green;
                 case SkinColorType.pink: return _pink;
             }
