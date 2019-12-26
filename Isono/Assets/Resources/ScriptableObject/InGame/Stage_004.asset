@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3729ddb195c103249ae89498099f6dff, type: 3}
-  m_Name: Stage_003
+  m_Name: Stage_004
   m_EditorClassIdentifier: 
   _cubeStageDataList:
-  - _colorNum: 1
+  - _colorNum: 0
     _pos: {x: 1.5, y: 0, z: 0}
   - _colorNum: 1
     _pos: {x: 1.5, y: 3, z: 0}
-  - _colorNum: 0
+  - _colorNum: 1
     _pos: {x: -1.5, y: 0, z: 0}
   - _colorNum: 0
     _pos: {x: -1.5, y: 3, z: 0}
