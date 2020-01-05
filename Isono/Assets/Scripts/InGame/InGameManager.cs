@@ -53,6 +53,7 @@ namespace Connect.InGame
         [SerializeField] private Transform  _linBlockCube = default;
         [SerializeField] private Transform  _cacheCube = default;
         [SerializeField] private int        _stageNum;
+        [SerializeField] private bool       _stageDebug;
 
         [SerializeField] private ProvisionalCube _provisionalCube = default;
 
@@ -68,7 +69,8 @@ namespace Connect.InGame
 
             skinManager = new SkinManager();
             skinManager.LoadSkinData();
-            _ingameView.InitView(UserData.Instance.nextStage);
+            int stageNum = _stageDebug ? _stageNum : UserData.Instance.nextStage;
+            _ingameView.InitView(stageNum);
             _ingameView.OnClickBack.Subscribe(_ =>
             {
                 RetryStage();
@@ -80,7 +82,7 @@ namespace Connect.InGame
             _cubeAllList = new List<Cube>();
 
             // ステージ生成.
-            createStage(UserData.Instance.nextStage);
+            createStage(stageNum);
 
             this.UpdateAsObservable()
                 .Where(_ => Input.GetMouseButton(0) && !_isClear)
