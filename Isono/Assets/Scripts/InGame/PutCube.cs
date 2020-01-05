@@ -65,19 +65,14 @@ namespace Connect.InGame
                             break;
 
                         case ObjectTagInfo.PUT_CUBE:
-                            for(int i = 0; i < hitcube._stageCube.Count; i++)
+                            foreach (var cube in hitcube._stageCube)
                             {
-                                if(_stageCube.Count != 0)
+                                if (_stageCube.Contains(cube) == false)
                                 {
-                                    if (_stageCube[i].transform.position != hitcube._stageCube[i].transform.position)
-                                    {
-                                        _stageCube.Add(hitcube._stageCube[i]);
-                                    }
+                                    continue;
                                 }
-                                else
-                                {
-                                    _stageCube.Add(hitcube._stageCube[i]);
-                                }
+
+                                _stageCube.Add(cube);
                             }
                             break;
 
