@@ -46,7 +46,8 @@ namespace Connect.InGame
         private List<Cube> _cubeAllList = default;
 
         // 追加
-        [SerializeField] private List<int> connectColor = default;
+        [SerializeField] private List<int> _connectColor = default;
+        [SerializeField] private List<int> _colorNum = default;
         //public List<int> colorChuck = new List<int>();
 
         [SerializeField] private Transform  _linkStageCube = default;
@@ -194,7 +195,7 @@ namespace Connect.InGame
             _ingameView.SetCurrentPutObjText(_rimitObj - _currentPutObj);
 
             connectCount = _stageObj.Length;
-            connectColor.Clear();
+            _connectColor.Clear();
 
             int max = 0;
 
@@ -207,7 +208,7 @@ namespace Connect.InGame
                     _stageObj[i].SetStatus(item);
                 }
 
-                if(max < item._colorNumber + 1)
+                if (max < item._colorNumber + 1)
                 {
                     max = item._colorNumber + 1;
                 }
@@ -215,7 +216,7 @@ namespace Connect.InGame
 
             for(int i = 0; i < max; i++)
             {
-                connectColor.Add(0);
+                _connectColor.Add(0);
             }
         }
 
@@ -345,25 +346,59 @@ namespace Connect.InGame
             // 追加
             if (1 < putCube._stageCube.Count)
             {
-                List<int> colorChuck = new List<int>();
+                List<int> chuckColor = new List<int>();
+                List<int> changeColor = new List<int>();
+                _colorNum.Clear();
 
                 // Cubeの色が一致しているかを調べる
                 for (int a = 0; a < putCube._stageCube.Count; a++)
                 {
-                    connectColor[putCube._stageCube[a]._colorNumber]++;
+                    _connectColor[putCube._stageCube[a]._colorNumber]++;
                 }
 
-                for(int b = 0; b < connectColor.Count; b++)
+                for (int y = 0; y < _connectColor.Count; y++)
                 {
-                    if(1 < connectColor[b])
+                    if (1 == _connectColor[y])
                     {
-                        colorChuck.Add(b);
+                        changeColor.Add(y);
                     }
-                    connectColor[b] = 0;
+                }
+
+                for (int t = 0; t < changeColor.Count; t++)
+                {
+                        if (t == 0)
+                        {
+                            _colorNum.Add(changeColor[changeColor.Count - 1]);
+                        }
+                        else if (t != changeColor.Count)
+                        {
+                            _colorNum.Add(changeColor[t - 1]);
+                        }
+                }
+
+                for (int b = 0; b < _connectColor.Count; b++)
+                {
+                    if (1 < _connectColor[b])
+                    {
+                        chuckColor.Add(b);
+                    }
+                    else if (_connectColor.Count - 1 <= b)
+                    {
+                        for (int i = 0; i < putCube._stageCube.Count; i++)
+                        {
+                            if (_colorNum[i] != 99)
+                            {
+                                putCube._stageCube[i]._colorNumber = _colorNum[i];
+                                SetColor(putCube._stageCube[i]);
+                            }
+                        }
+                        Debug.Log("AAA");
+                    }
+                    _connectColor[b] = 0;
                 }
 
                 // 色が一致したCubeを非表示にする予定
-                if (colorChuck.Count != 0)
+                if (chuckColor.Count != 0)
                 {
                     for (int j = 0; j < putCube._instantiateCube.Count; j++)
                     {
@@ -372,7 +407,7 @@ namespace Connect.InGame
                             switch (putCube._instantiateCube[j].tag)
                             {
                                 case ObjectTagInfo.STAGE_CUBE:
-                                    foreach (var color in colorChuck)
+                                    foreach (var color in chuckColor)
                                     {
                                         if (color == putCube._instantiateCube[j]._colorNumber)
                                         {
