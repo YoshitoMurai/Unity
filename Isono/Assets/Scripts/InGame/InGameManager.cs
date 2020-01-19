@@ -48,13 +48,13 @@ namespace Connect.InGame
         // 追加
         [SerializeField] private List<int> _connectColor = default;
         [SerializeField] private List<int> _colorNum = default;
-        //public List<int> colorChuck = new List<int>();
+
 
         [SerializeField] private Transform  _linkStageCube = default;
         [SerializeField] private Transform  _linBlockCube = default;
         [SerializeField] private Transform  _cacheCube = default;
-        [SerializeField] private int        _stageNum;
-        [SerializeField] private bool       _stageDebug;
+        [SerializeField] private int        _stageNum = default;
+        [SerializeField] private bool       _stageDebug = default;
 
         [SerializeField] private ProvisionalCube _provisionalCube = default;
 
@@ -291,11 +291,27 @@ namespace Connect.InGame
             }
         }
 
+
+        private float GetAngle(Vector2 start, Vector2 target)
+        {
+            Vector2 dt = target - start;
+            float rad = Mathf.Atan2(dt.x, dt.y);
+            float degree = rad * Mathf.Rad2Deg;
+
+            if (degree < 0)
+            {
+                degree += 360;
+            }
+
+            return degree;
+        }
+
         private void SetStrand(PutCube putCube)
         {
             connectCubeList.Add(putCube);
             _cubeAllList.Add(putCube);
             _provisionalCube.SetLineRendererCount(putCube);
+            _colorNum.Clear();
 
             // PutCubeに各ブロック判定を追加
             foreach (var item in connectCubeList)
@@ -349,54 +365,60 @@ namespace Connect.InGame
             if (1 < putCube._stageCube.Count)
             {
                 List<int> chuckColor = new List<int>();
-                List<int> changeColor = new List<int>();
-                _colorNum.Clear();
+                List<float> angle = new List<float>();
+                List<Cube> sortCube = new List<Cube>();
 
                 // Cubeの色が一致しているかを調べる
                 for (int a = 0; a < putCube._stageCube.Count; a++)
                 {
-                    _connectColor[putCube._stageCube[a]._colorNumber]++;
-                }
-
-                for (int y = 0; y < _connectColor.Count; y++)
-                {
-                    if (1 == _connectColor[y])
+                    if (putCube._stageCube[a].tag == ObjectTagInfo.STAGE_CUBE)
                     {
-                        changeColor.Add(y);
+                        _connectColor[putCube._stageCube[a]._colorNumber]++;
+                    }
+                    angle.Add(GetAngle(this.transform.position, putCube._stageCube[a].transform.position));
+                    sortCube.Add(putCube._stageCube[a]);
+                }
+                angle.Sort();
+
+
+                // 
+                for (int c = 0; c < angle.Count; c++)
+                {
+                    foreach (var stagecube in putCube._stageCube)
+                    {
+                        var num = GetAngle(this.transform.position, stagecube.transform.position);
+
+                        if (num == angle[c])
+                        {
+                            sortCube.Remove(stagecube);
+                            sortCube.Insert(c, stagecube);
+                            _colorNum.Add(stagecube._colorNumber);
+                        }
                     }
                 }
+                _colorNum.Insert(0, _colorNum[_colorNum.Count - 1]);
+                _colorNum.RemoveAt(_colorNum.Count - 1);
 
-                for (int t = 0; t < changeColor.Count; t++)
-                {
-                        if (t == 0)
-                        {
-                            _colorNum.Add(changeColor[changeColor.Count - 1]);
-                        }
-                        else if (t != changeColor.Count)
-                        {
-                            _colorNum.Add(changeColor[t - 1]);
-                        }
-                }
 
+                // 色が一致しているかを調べる
                 for (int b = 0; b < _connectColor.Count; b++)
                 {
                     if (1 < _connectColor[b])
                     {
                         chuckColor.Add(b);
                     }
-                    else if (_connectColor.Count - 1 <= b)
-                    {
-                        for (int i = 0; i < putCube._stageCube.Count; i++)
-                        {
-                            if (_colorNum[i] != 99)
-                            {
-                                putCube._stageCube[i]._colorNumber = _colorNum[i];
-                                SetColor(putCube._stageCube[i]);
-                            }
-                        }
-                        Debug.Log("AAA");
-                    }
                     _connectColor[b] = 0;
+                }       
+
+                // 一致してる色がなければ色を変える
+                if (chuckColor.Count == 0)
+                {
+                    // 色を変える
+                    for (int i = 0; i < sortCube.Count; i++)
+                    {
+                        sortCube[i]._colorNumber = _colorNum[i];
+                        SetColor(sortCube[i]);
+                    }
                 }
 
                 // 色が一致したCubeを非表示にする予定
@@ -425,11 +447,11 @@ namespace Connect.InGame
                                     putCube._instantiateCube[j].gameObject.SetActive(false);
                                     _provisionalCube.InitLineRemove(putCube._instantiateCube[j]);
                                     break;
+
                                 default: break;
                             }
                         }
                     }
-                    //colorChuck.Clear();
                 }
             }
 
@@ -437,17 +459,12 @@ namespace Connect.InGame
             {
                 GameClear();
             }
-            else
-            {
-                //connectFlag.Clear();
-            }
         }
 
         void GameClear()
         {
             _isClear = true;
             _ingameView.SetActiveClear(true);
-            //connectColor.Clear();
         }
 
         private void SetColor(Cube cube)
